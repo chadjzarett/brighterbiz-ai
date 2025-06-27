@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Loader2, AlertCircle, ArrowRight } from 'lucide-react';
+import { Loader2, AlertCircle, ArrowRight, Send } from 'lucide-react';
 import { useFormValidation, useLoadingState } from '@/lib/hooks';
 import { AnimatedProgressBar } from './ProgressTracker';
 
@@ -22,8 +22,57 @@ export const EnhancedForm = ({
 }: EnhancedFormProps) => {
   const [inputValue, setInputValue] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
   const { errors, isValid, validateField } = useFormValidation();
   const { isLoading, progress, startLoading, updateProgress, completeLoading } = useLoadingState();
+
+  // Detect mobile device and keyboard state
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    // Detect virtual keyboard on mobile
+    const initialViewportHeight = window.visualViewport?.height || window.innerHeight;
+    
+    const handleViewportChange = () => {
+      if (window.visualViewport) {
+        const currentHeight = window.visualViewport.height;
+        const heightDifference = initialViewportHeight - currentHeight;
+        setIsKeyboardOpen(heightDifference > 150); // Keyboard likely open if viewport shrunk by more than 150px
+      }
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleViewportChange);
+    }
+
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleViewportChange);
+      }
+    };
+  }, []);
+
+  // Auto-scroll to keep input visible when keyboard opens on mobile
+  useEffect(() => {
+    if (isMobile && isKeyboardOpen && isFocused && inputRef.current) {
+      setTimeout(() => {
+        inputRef.current?.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center',
+          inline: 'nearest'
+        });
+      }, 300);
+    }
+  }, [isKeyboardOpen, isFocused, isMobile]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -65,7 +114,23 @@ export const EnhancedForm = ({
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && isValid && !isLoading) {
+      e.preventDefault();
       handleSubmit();
+    }
+  };
+
+  const handleFocus = () => {
+    setIsFocused(true);
+    if (isMobile) {
+      // Small delay to ensure keyboard animation starts
+      setTimeout(() => setIsKeyboardOpen(true), 100);
+    }
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    if (isMobile) {
+      setTimeout(() => setIsKeyboardOpen(false), 100);
     }
   };
 
@@ -73,16 +138,25 @@ export const EnhancedForm = ({
 
   return (
     <motion.div
+      ref={formRef}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className={`w-full ${className}`}
+      className={`w-full ${className} ${isMobile && isKeyboardOpen ? 'mobile-keyboard-active' : ''}`}
+      style={{
+        // Ensure form stays visible when keyboard is open on mobile
+        ...(isMobile && isKeyboardOpen ? {
+          position: 'relative',
+          zIndex: 1000,
+        } : {})
+      }}
     >
       <Card 
         className={`
           bg-gray-900 rounded-2xl border border-gray-700 shadow-lg 
           transition-all duration-500 ease-in-out
           ${isExpanded ? 'p-6' : 'p-2'}
+          ${isMobile && isKeyboardOpen ? 'mobile-form-keyboard' : ''}
         `}
       >
         <div className="space-y-4">
@@ -102,18 +176,23 @@ export const EnhancedForm = ({
           
           <div className="relative">
             <Input
+              ref={inputRef}
               type="text"
               value={inputValue}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
               placeholder={isExpanded ? placeholder : "Tell us about your business..."}
               className={`w-full px-4 py-3 text-base bg-gray-800 text-white placeholder-gray-300 rounded-xl border-2 transition-all duration-300
                 ${isFocused ? 'ring-4 ring-blue-500/30 border-blue-500' : 'border-gray-700'}
                 ${errors.business ? 'border-red-500' : ''}
+                ${isMobile ? 'text-16px' : ''} // Prevent zoom on iOS
               `}
               disabled={isLoading}
+              style={{
+                fontSize: isMobile ? '16px' : undefined, // Prevent iOS zoom
+              }}
             />
           </div>
 
@@ -147,10 +226,12 @@ export const EnhancedForm = ({
                     ${isValid
                       ? 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-md hover:shadow-lg transform hover:-translate-y-0.5'
                       : 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                    }`}
+                    }
+                    ${isMobile && isKeyboardOpen ? 'mobile-submit-btn' : ''}
+                  `}
                 >
-                  <span>Get My Recommendations</span>
-                  <ArrowRight className="w-5 h-5" />
+                  <span>{isMobile ? 'Send' : 'Get My Recommendations'}</span>
+                  {isMobile ? <Send className="w-5 h-5" /> : <ArrowRight className="w-5 h-5" />}
                 </Button>
                 
                 {errors.business && (
@@ -165,14 +246,10 @@ export const EnhancedForm = ({
         </div>
       </Card>
       
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="text-md text-gray-800 mt-5 text-center"
-      >
-        No signup required • Get instant results
-      </motion.p>
+      {/* Mobile keyboard spacer */}
+      {isMobile && isKeyboardOpen && (
+        <div className="h-20" /> // Extra space to ensure button is visible
+      )}
     </motion.div>
   );
 }; 
