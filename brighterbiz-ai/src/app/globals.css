@@ -313,8 +313,8 @@
       right: 0;
       z-index: 1000;
       padding: 1rem;
-      background: rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(10px);
+      background: transparent;
+      backdrop-filter: none;
     }
 
     /* Form adjustments when keyboard is open */
@@ -370,5 +370,21 @@
       max-height: 70vh;
       overflow-y: auto;
     }
+  }
+
+  /* Force white text for dark form inputs */
+  .input-white-text {
+    color: white !important;
+    -webkit-text-fill-color: white !important;
+  }
+
+  .input-white-text:focus {
+    color: white !important;
+    -webkit-text-fill-color: white !important;
+  }
+
+  .input-white-text::placeholder {
+    color: rgb(209, 213, 219) !important;
+    -webkit-text-fill-color: rgb(209, 213, 219) !important;
   }
 }

@@ -8,21 +8,21 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "BrighterBiz.ai - AI Use Case Recommender for Small Businesses",
-  description: "Discover how artificial intelligence can transform your small business. Get personalized AI recommendations tailored to your industry and business model.",
-  keywords: "AI for small business, artificial intelligence, business recommendations, small business AI, AI tools",
+  title: "BrighterBiz.ai - Free AI Solutions for Small Businesses",
+  description: "Get free AI recommendations for your small business in seconds. No account or credit card required. Discover how artificial intelligence can transform your business.",
+  keywords: "free AI for small business, artificial intelligence, business recommendations, small business AI, AI tools, AI solutions, AI for SMBs, free AI recommendations",
   authors: [{ name: "BrighterBiz.ai" }],
   openGraph: {
-    title: "BrighterBiz.ai - AI Use Case Recommender",
-    description: "Discover how artificial intelligence can transform your small business in seconds.",
+    title: "BrighterBiz.ai - Free AI Solutions for Small Businesses",
+    description: "Get free AI recommendations for your small business in seconds. No account or credit card required.",
     url: "https://brighterbiz.ai",
     siteName: "BrighterBiz.ai",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "BrighterBiz.ai - AI Use Case Recommender",
-    description: "Discover how artificial intelligence can transform your small business in seconds.",
+    title: "BrighterBiz.ai - Free AI Solutions for Small Businesses",
+    description: "Get free AI recommendations for your small business in seconds. No account or credit card required.",
   },
 };
 

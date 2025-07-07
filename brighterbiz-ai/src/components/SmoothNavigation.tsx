@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useSmoothScroll } from '@/lib/hooks';
-import { ChevronUp, Home, Star, Users } from 'lucide-react';
+import { ChevronUp } from 'lucide-react';
 
 interface NavigationItem {
   id: string;

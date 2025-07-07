@@ -118,7 +118,7 @@ Return ONLY a valid JSON array with no additional text or formatting. Each objec
     let recommendations: Omit<Recommendation, 'id'>[];
     try {
       recommendations = JSON.parse(content);
-    } catch (parseError) {
+    } catch {
       console.error('Failed to parse OpenAI response:', content);
       throw new Error('Invalid JSON response from OpenAI');
     }

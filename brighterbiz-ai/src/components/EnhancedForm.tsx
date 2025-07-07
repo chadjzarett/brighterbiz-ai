@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Loader2, AlertCircle, ArrowRight, Send } from 'lucide-react';
+import { AlertCircle, ArrowRight } from 'lucide-react';
 import { useFormValidation, useLoadingState } from '@/lib/hooks';
 import { AnimatedProgressBar } from './ProgressTracker';
 
@@ -107,7 +107,7 @@ export const EnhancedForm = ({
       setTimeout(() => {
         completeLoading();
       }, 500);
-    } catch (error) {
+    } catch {
       completeLoading();
     }
   };
@@ -184,14 +184,21 @@ export const EnhancedForm = ({
               onFocus={handleFocus}
               onBlur={handleBlur}
               placeholder={isExpanded ? placeholder : "Tell us about your business..."}
-              className={`w-full px-4 py-3 text-base bg-gray-800 text-white placeholder-gray-300 rounded-xl border-2 transition-all duration-300
+              className={`w-full px-4 py-3 text-base bg-gray-800 !text-white placeholder-gray-300 rounded-xl border-2 transition-all duration-300
                 ${isFocused ? 'ring-4 ring-blue-500/30 border-blue-500' : 'border-gray-700'}
                 ${errors.business ? 'border-red-500' : ''}
                 ${isMobile ? 'text-16px' : ''} // Prevent zoom on iOS
+                focus:text-white focus:!text-white
+                [&:not(:placeholder-shown)]:!text-white
+                [&]:!text-white
+                input-white-text
               `}
               disabled={isLoading}
               style={{
                 fontSize: isMobile ? '16px' : undefined, // Prevent iOS zoom
+                color: 'white', // Force white text
+                WebkitTextFillColor: 'white', // Override webkit default
+                WebkitTextStroke: 'transparent', // Ensure no stroke
               }}
             />
           </div>
@@ -230,8 +237,8 @@ export const EnhancedForm = ({
                     ${isMobile && isKeyboardOpen ? 'mobile-submit-btn' : ''}
                   `}
                 >
-                  <span>{isMobile ? 'Send' : 'Get My Recommendations'}</span>
-                  {isMobile ? <Send className="w-5 h-5" /> : <ArrowRight className="w-5 h-5" />}
+                  <span>{isMobile ? 'Get Recommendations' : 'Get My Recommendations'}</span>
+                  <ArrowRight className="w-5 h-5" />
                 </Button>
                 
                 {errors.business && (

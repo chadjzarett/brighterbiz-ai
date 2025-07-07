@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { ChevronRight, User, CheckCircle, Clock, Sparkles, Camera, Utensils, Lightbulb, Star, Users, ArrowRight } from 'lucide-react';
+import { User, CheckCircle, Clock, Sparkles, Camera, Utensils, Lightbulb, Star, Users, ArrowRight } from 'lucide-react';
 import { EnhancedForm } from '@/components/EnhancedForm';
 import { SmoothNavigation, SectionWrapper } from '@/components/SmoothNavigation';
 import { ProgressTracker } from '@/components/ProgressTracker';
@@ -16,7 +16,7 @@ export default function Home() {
   const [currentStep, setCurrentStep] = useState(0);
   const router = useRouter();
 
-  const businessSuggestions = [
+  const businessSuggestions = useMemo(() => [
     'I run a small bakery in downtown Portland',
     'I own a coffee shop downtown',
     'I have a fitness studio',
@@ -25,7 +25,7 @@ export default function Home() {
     'I own a restaurant',
     'I have a photography business',
     'I run a consulting firm'
-  ];
+  ], []);
 
   const progressSteps = [
     { id: 'input', label: 'Describe', description: 'Tell us about your business' },
@@ -56,7 +56,7 @@ export default function Home() {
     }, 100);
 
     return () => clearInterval(typeWriter);
-  }, [currentSuggestionIndex]);
+  }, [currentSuggestionIndex, businessSuggestions]);
 
   const handleGetRecommendations = async (businessInput: string) => {
     // Simulate progress through steps
@@ -137,8 +137,8 @@ export default function Home() {
             transition={{ delay: 0.4 }}
             className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-none font-[family-name:var(--font-inter)]"
           >
-            AI recommendations tailored<br/>
-            <span className="gradient-text">for your business</span>
+            Free AI-powered recommendations <br/>
+            <span className="gradient-text">tailored to grow your business</span>
           </motion.h1>
           
           <motion.p 
@@ -147,7 +147,7 @@ export default function Home() {
             transition={{ delay: 0.6 }}
             className="text-xl text-gray-600 mb-12 max-w-xl mx-auto"
           >
-            Discover how artificial intelligence can transform your small business in seconds.
+            Instantly discover how AI can save you time, boost revenue, and simplify operations—no tech skills required.
           </motion.p>
           
           <motion.div 
@@ -161,6 +161,26 @@ export default function Home() {
               onSubmit={handleGetRecommendations}
               placeholder={placeholderText || "e.g., I run a small bakery in downtown Portland"}
             />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mt-6"
+          >
+            <div className="flex items-center space-x-2 text-green-600">
+              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-sm sm:text-sm font-medium">No account required</span>
+            </div>
+            <div className="flex items-center space-x-2 text-green-600">
+              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-sm sm:text-sm font-medium">No credit card needed</span>
+            </div>
+            <div className="flex items-center space-x-2 text-green-600">
+              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-sm sm:text-sm font-medium">100% Free</span>
+            </div>
           </motion.div>
 
           {/* Progress Tracker */}
@@ -359,7 +379,7 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-[2.5rem] md:text-[3.5rem] font-extrabold text-white mb-6 leading-tight"
           >
-            Ready to transform your business with AI?<br />
+            Start for free today!<br />
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -377,10 +397,10 @@ export default function Home() {
           >
             <Button
               onClick={scrollToInputField}
-              className="btn-premium px-7 py-3 text-base text-black font-semibold rounded-xl bg-white border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2 min-h-[48px] mx-auto hover:-translate-y-1"
+              className="btn-premium px-7 py-3 text-base text-black font-semibold rounded-xl bg-white border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center min-h-[48px] mx-auto hover:-translate-y-1"
             >
-              <span>Try it Now - It's Free</span>
-              <ArrowRight className="w-5 h-5 ml-2" />
+              <span>Try For Free</span>
+              <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </motion.div>
         </div>
@@ -391,20 +411,20 @@ export default function Home() {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
-        className="bg-gray-900 py-12"
+        className="bg-gray-900 py-8 sm:py-12"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
             <motion.div 
               className="flex items-center space-x-2"
               whileHover={{ scale: 1.05 }}
             >
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Lightbulb className="w-5 h-5 text-white" />
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <span className="text-white font-medium">BrighterBiz.ai</span>
+              <span className="text-white font-medium text-sm sm:text-base">BrighterBiz.ai</span>
             </motion.div>
-            <p className="text-gray-400 text-sm">© 2025 BrighterBiz.ai. Making AI accessible for small business.</p>
+            <p className="text-gray-400 text-xs sm:text-sm text-center sm:text-left">© 2025 BrighterBiz.ai. Making AI accessible for small business.</p>
           </div>
         </div>
       </motion.footer>
