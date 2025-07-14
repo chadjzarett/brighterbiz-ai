@@ -24,9 +24,27 @@ interface Recommendation {
   timeToImplement: string;
 }
 
+interface FormData {
+  businessName: string;
+  businessType: string;
+  businessDescription: string;
+  companySize: string;
+  monthlyRevenue: string;
+  yearsInBusiness: string;
+  primaryGoals: string[];
+  currentChallenges: string[];
+  techComfort: string;
+  budget: string;
+  timeline: string;
+  focusAreas: string[];
+  additionalInfo?: string;
+}
+
 export default function ResultsPage() {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [businessDescription, setBusinessDescription] = useState('');
+  const [isStructuredData, setIsStructuredData] = useState(false);
+  const [formData, setFormData] = useState<FormData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [progress, setProgress] = useState(0);
@@ -44,16 +62,32 @@ export default function ResultsPage() {
   
   useEffect(() => {
     const description = searchParams.get('business');
+    const structured = searchParams.get('structured') === 'true';
+    const formDataStr = searchParams.get('formData');
+    
     if (!description) {
       router.push('/');
       return;
     }
     
     setBusinessDescription(description);
-    fetchRecommendations(description);
+    setIsStructuredData(structured);
+    
+    if (structured && formDataStr) {
+      try {
+        const parsedFormData = JSON.parse(formDataStr);
+        setFormData(parsedFormData);
+        fetchRecommendations(description, structured, parsedFormData);
+      } catch (error) {
+        console.error('Failed to parse form data:', error);
+        fetchRecommendations(description);
+      }
+    } else {
+      fetchRecommendations(description);
+    }
   }, [searchParams, router]);
 
-  const fetchRecommendations = async (description: string) => {
+  const fetchRecommendations = async (description: string, structured?: boolean, formData?: FormData) => {
     try {
       setLoading(true);
       setCurrentStep(0);
@@ -74,12 +108,17 @@ export default function ResultsPage() {
       setTimeout(() => setCurrentStep(1), 1000);
       setTimeout(() => setCurrentStep(2), 2000);
 
+      const requestBody = {
+        businessDescription: description,
+        ...(structured && { structured, formData })
+      };
+
       const response = await fetch('/api/recommendations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ businessDescription: description }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -108,6 +147,15 @@ export default function ResultsPage() {
       'Operations': 'bg-blue-100 text-blue-700',
       'Analytics': 'bg-purple-100 text-purple-700',
       'Automation': 'bg-orange-100 text-orange-700',
+      'Sales': 'bg-yellow-100 text-yellow-700',
+      'Content Creation': 'bg-indigo-100 text-indigo-700',
+      'Finance': 'bg-teal-100 text-teal-700',
+      'HR & Hiring': 'bg-rose-100 text-rose-700',
+      'Legal & Compliance': 'bg-gray-100 text-gray-700',
+      'Productivity': 'bg-cyan-100 text-cyan-700',
+      'E-commerce': 'bg-fuchsia-100 text-fuchsia-700',
+      'Customer Insights': 'bg-lime-100 text-lime-700',
+      'IT & Security': 'bg-red-100 text-red-700'
     };
     return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-700';
   };
@@ -373,9 +421,70 @@ export default function ResultsPage() {
         className="max-w-4xl mx-auto mb-6 sm:mb-8 px-4"
       >
         <div className="bg-white p-3 sm:p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
-          <p className="text-gray-800 text-sm sm:text-base font-semibold text-center break-words">
-            Your Business: <span className="text-blue-600">"{businessDescription}"</span>
-          </p>
+          {isStructuredData && formData ? (
+            <div className="space-y-3">
+              <div className="text-center mb-4">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                  {formData.businessName}
+                </h3>
+                <div className="flex flex-wrap justify-center gap-2 mb-3">
+                  <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                    {formData.businessType}
+                  </span>
+                  <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                    {formData.companySize} employees
+                  </span>
+                  <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
+                    {formData.monthlyRevenue}/month
+                  </span>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="font-medium text-gray-700">Primary Goals:</span>
+                  <div className="mt-1 flex flex-wrap gap-1">
+                    {formData.primaryGoals.map((goal: string, index: number) => (
+                      <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
+                        {goal}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                
+                <div>
+                  <span className="font-medium text-gray-700">Focus Areas:</span>
+                  <div className="mt-1 flex flex-wrap gap-1">
+                    {formData.focusAreas.map((area: string, index: number) => (
+                      <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
+                        {area}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                
+                <div>
+                  <span className="font-medium text-gray-700">Budget:</span>
+                  <span className="ml-2 text-gray-600">{formData.budget}/month</span>
+                </div>
+                
+                <div>
+                  <span className="font-medium text-gray-700">Timeline:</span>
+                  <span className="ml-2 text-gray-600">{formData.timeline}</span>
+                </div>
+              </div>
+              
+              <div className="pt-2 border-t border-gray-100">
+                <p className="text-gray-600 text-sm italic">
+                  "{formData.businessDescription}"
+                </p>
+              </div>
+            </div>
+          ) : (
+            <p className="text-gray-800 text-sm sm:text-base font-semibold text-center break-words">
+              Your Business: <span className="text-blue-600">"{businessDescription}"</span>
+            </p>
+          )}
         </div>
       </motion.div>
 

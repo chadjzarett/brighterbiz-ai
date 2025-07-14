@@ -69,6 +69,8 @@ export default function Home() {
     router.push(`/results?business=${encodedBusiness}`);
   };
 
+
+
   const scrollToInputField = () => {
     const inputSection = document.querySelector('#hero-input-section');
     if (inputSection) {
@@ -157,6 +159,7 @@ export default function Home() {
             transition={{ delay: 0.8 }}
             className="max-w-2xl mx-auto"
           >
+            {/* Form Content */}
             <EnhancedForm
               onSubmit={handleGetRecommendations}
               placeholder={placeholderText || "e.g., I run a small bakery in downtown Portland"}

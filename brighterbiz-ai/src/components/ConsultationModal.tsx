@@ -23,6 +23,7 @@ const consultationFormSchema = z.object({
   lastName: z.string().min(2, 'Last name must be at least 2 characters'),
   email: z.string().email('Please enter a valid email address'),
   phone: z.string().optional(),
+  preferredContactMethod: z.enum(['email', 'phone']),
   businessName: z.string().optional(),
   website: z.string().url('Please enter a valid website URL').optional().or(z.literal('')),
   companySize: z.string().optional(),
@@ -72,6 +73,7 @@ export default function ConsultationModal({
     resolver: zodResolver(consultationFormSchema),
     defaultValues: {
       selectedRecommendations: recommendations.map(r => r.title), // Default: all recommendations selected
+      preferredContactMethod: 'email' as const, // Default to email
     }
   });
 
@@ -102,7 +104,8 @@ export default function ConsultationModal({
           firstName: data.firstName,
           lastName: data.lastName,
           email: data.email,
-          phone: data.phone || ''
+          phone: data.phone || '',
+          preferredContactMethod: data.preferredContactMethod
         },
         businessInfo: {
           businessName: data.businessName || '',
@@ -296,6 +299,18 @@ export default function ConsultationModal({
                 placeholder="+1 (555) 123-4567"
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Preferred Contact Method
+              </label>
+              <select
+                {...register('preferredContactMethod')}
+                className="w-full h-9 px-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="email">Email</option>
+                <option value="phone">Phone</option>
+              </select>
+            </div>
           </div>
 
           {/* Business Information */}
@@ -365,10 +380,10 @@ export default function ConsultationModal({
                 className="w-full h-9 px-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">Select budget</option>
-                <option value="<$1K">Less than $1,000</option>
-                <option value="$1-5K">$1,000 - $5,000</option>
-                <option value="$5-15K">$5,000 - $15,000</option>
-                <option value="$15K+">$15,000+</option>
+                <option value="<$250">Less than $250</option>
+                <option value="$250-500">$250 - $500</option>
+                <option value="$500-1000">$500 - $1,000</option>
+                <option value="$1000+">$1,000 or more</option>
                 <option value="Let's discuss">Let's discuss</option>
               </select>
             </div>

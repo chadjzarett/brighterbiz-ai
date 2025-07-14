@@ -8,6 +8,7 @@ const consultationRequestSchema = z.object({
     lastName: z.string().min(1, 'Last name is required'),
     email: z.string().email('Invalid email address'),
     phone: z.string().optional(),
+    preferredContactMethod: z.enum(['email', 'phone']),
   }),
   businessInfo: z.object({
     businessName: z.string().optional(),
@@ -53,33 +54,28 @@ export async function POST(request: NextRequest) {
     const payload = validationResult.data;
     console.log('Validated payload:', payload);
 
-    // TODO: Replace with actual n8n webhook call when n8n is set up
-    // const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL;
-    // if (!n8nWebhookUrl) {
-    //   throw new Error('N8N_WEBHOOK_URL environment variable is not set');
-    // }
+    // Call n8n webhook
+    const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL;
+    if (!n8nWebhookUrl) {
+      throw new Error('N8N_WEBHOOK_URL environment variable is not set');
+    }
 
-    // For now, simulate the n8n webhook call
-    console.log('Simulating n8n webhook call with payload:', payload);
+    console.log('Calling n8n webhook with payload:', payload);
     
-    // Simulate processing time
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    const n8nResponse = await fetch(n8nWebhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
 
-    // TODO: Uncomment when n8n is ready
-    // const n8nResponse = await fetch(n8nWebhookUrl, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(payload),
-    // });
+    if (!n8nResponse.ok) {
+      throw new Error(`n8n webhook failed: ${n8nResponse.status} ${n8nResponse.statusText}`);
+    }
 
-    // if (!n8nResponse.ok) {
-    //   throw new Error(`n8n webhook failed: ${n8nResponse.status} ${n8nResponse.statusText}`);
-    // }
-
-    // const n8nResult = await n8nResponse.json();
-    // console.log('n8n webhook response:', n8nResult);
+    const n8nResult = await n8nResponse.json();
+    console.log('n8n webhook response:', n8nResult);
 
     // Return success response
     return NextResponse.json({
