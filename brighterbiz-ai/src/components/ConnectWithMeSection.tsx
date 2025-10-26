@@ -69,9 +69,10 @@ export default function ConnectWithMeSection({ onConnectClick }: ConnectWithMeSe
             whileTap={{ scale: 0.95 }}
             className="w-full sm:w-auto"
           >
-            <Button 
+            <Button
               onClick={onConnectClick}
-              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 rounded-xl shadow-lg text-lg font-semibold w-full sm:w-auto min-w-[280px] transition-all duration-300 hover:shadow-xl"
+              variant="primary"
+              className="px-8 py-4 rounded-xl shadow-lg text-lg font-semibold w-full sm:w-auto min-w-[280px] transition-all duration-300 hover:shadow-xl"
             >
               <Calendar className="w-5 h-5 mr-3" />
               Schedule Free Consultation

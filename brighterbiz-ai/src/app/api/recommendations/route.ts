@@ -133,10 +133,27 @@ Return ONLY a valid JSON array with no additional text or formatting. Each objec
       throw new Error('Empty response from OpenAI');
     }
 
+    // Log the raw OpenAI response for debugging
+    console.log('OpenAI raw response:', content);
+
+    // Patch: Strip code fences and extra text before JSON array
+    let jsonString = content.trim();
+    // Remove code block markers if present
+    if (jsonString.startsWith('```json')) {
+      jsonString = jsonString.replace(/^```json/, '').replace(/```$/, '').trim();
+    } else if (jsonString.startsWith('```')) {
+      jsonString = jsonString.replace(/^```/, '').replace(/```$/, '').trim();
+    }
+    // Remove leading explanation if present
+    const firstBracket = jsonString.indexOf('[');
+    if (firstBracket > 0) {
+      jsonString = jsonString.slice(firstBracket);
+    }
+
     // Parse the JSON response
     let recommendations: Omit<Recommendation, 'id'>[];
     try {
-      recommendations = JSON.parse(content);
+      recommendations = JSON.parse(jsonString);
     } catch {
       console.error('Failed to parse OpenAI response:', content);
       throw new Error('Invalid JSON response from OpenAI');
@@ -227,10 +244,27 @@ Return ONLY a valid JSON array with no additional text or formatting. Each objec
       throw new Error('Empty response from OpenAI');
     }
 
+    // Log the raw OpenAI response for debugging
+    console.log('OpenAI raw response:', content);
+
+    // Patch: Strip code fences and extra text before JSON array
+    let jsonString = content.trim();
+    // Remove code block markers if present
+    if (jsonString.startsWith('```json')) {
+      jsonString = jsonString.replace(/^```json/, '').replace(/```$/, '').trim();
+    } else if (jsonString.startsWith('```')) {
+      jsonString = jsonString.replace(/^```/, '').replace(/```$/, '').trim();
+    }
+    // Remove leading explanation if present
+    const firstBracket = jsonString.indexOf('[');
+    if (firstBracket > 0) {
+      jsonString = jsonString.slice(firstBracket);
+    }
+
     // Parse the JSON response
     let recommendations: Omit<Recommendation, 'id'>[];
     try {
-      recommendations = JSON.parse(content);
+      recommendations = JSON.parse(jsonString);
     } catch {
       console.error('Failed to parse OpenAI response:', content);
       throw new Error('Invalid JSON response from OpenAI');

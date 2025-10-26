@@ -33,8 +33,8 @@ export const ProgressTracker = ({ steps, currentStep, className = '' }: Progress
                   index < currentStep
                     ? 'bg-green-500 border-green-500 text-white'
                     : index === currentStep
-                    ? 'bg-blue-500 border-blue-500 text-white'
-                    : 'bg-white border-gray-300 text-gray-400'
+                    ? 'bg-black dark:bg-white border-black dark:border-white text-white dark:text-black'
+                    : 'bg-tertiary border-primary text-tertiary'
                 }`}
               >
                 {index < currentStep ? (
@@ -84,12 +84,12 @@ export const AnimatedProgressBar = ({
 }) => {
   return (
     <div className={`w-full ${className}`}>
-      <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+      <div className="w-full bg-tertiary rounded-full h-2 overflow-hidden">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full relative"
+          className="h-full bg-black dark:bg-white rounded-full relative"
         >
           <motion.div
             animate={{ 

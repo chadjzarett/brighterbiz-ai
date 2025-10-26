@@ -190,33 +190,34 @@ export default function ConsultationModal({
             >
               <CheckCircle2 className="w-8 h-8 text-green-600" />
             </motion.div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+            <h3 className="text-2xl font-bold text-primary mb-2">
               Thanks! We'll Be In Touch Soon
             </h3>
-            <p className="text-gray-600 mb-6">
-              We&apos;ve received your consultation request and our AI is already analyzing your business needs. 
+            <p className="text-secondary mb-6">
+              We&apos;ve received your consultation request and our AI is already analyzing your business needs.
               Expect a personalized follow-up within 24-48 hours with:
             </p>
             <div className="text-left space-y-2 mb-6">
               <div className="flex items-start space-x-2">
                 <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                <span className="text-sm text-gray-700">Custom implementation roadmap for your selected AI solutions</span>
+                <span className="text-sm text-primary">Custom implementation roadmap for your selected AI solutions</span>
               </div>
               <div className="flex items-start space-x-2">
                 <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                <span className="text-sm text-gray-700">Specific tool recommendations based on your budget and timeline</span>
+                <span className="text-sm text-primary">Specific tool recommendations based on your budget and timeline</span>
               </div>
               <div className="flex items-start space-x-2">
                 <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                <span className="text-sm text-gray-700">Next steps to get started with the highest-impact recommendations</span>
+                <span className="text-sm text-primary">Next steps to get started with the highest-impact recommendations</span>
               </div>
             </div>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-secondary mb-4">
               Check your email for confirmation details.
             </p>
             <Button
               onClick={handleClose}
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+              variant="primary"
+              className="w-full"
             >
               Continue Exploring
             </Button>
@@ -231,10 +232,10 @@ export default function ConsultationModal({
       <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col p-0">
         <div className="p-6 pb-0">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-gray-900">
+            <DialogTitle className="text-2xl font-bold text-primary">
               Let&apos;s Discuss Your AI Implementation
             </DialogTitle>
-            <DialogDescription className="text-gray-600">
+            <DialogDescription className="text-secondary">
               Tell us about your business so we can provide the most relevant guidance
             </DialogDescription>
           </DialogHeader>
@@ -245,10 +246,10 @@ export default function ConsultationModal({
           <div className="flex-1 overflow-y-auto px-6 space-y-6">
           {/* Contact Information */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900">Contact Information</h3>
+            <h3 className="text-lg font-semibold text-primary">Contact Information</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-primary mb-1">
                   First Name *
                 </label>
                 <Input
@@ -261,7 +262,7 @@ export default function ConsultationModal({
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-primary mb-1">
                   Last Name *
                 </label>
                 <Input
@@ -275,7 +276,7 @@ export default function ConsultationModal({
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-primary mb-1">
                 Email Address *
               </label>
               <Input
@@ -289,9 +290,9 @@ export default function ConsultationModal({
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-primary mb-1">
                 Phone Number
-                <span className="text-gray-500 font-normal"> (for faster follow-up)</span>
+                <span className="text-secondary font-normal"> (for faster follow-up)</span>
               </label>
               <Input
                 {...register('phone')}
@@ -300,12 +301,12 @@ export default function ConsultationModal({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-primary mb-1">
                 Preferred Contact Method
               </label>
               <select
                 {...register('preferredContactMethod')}
-                className="w-full h-9 px-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full h-9 px-3 py-1 text-sm border border-primary bg-primary text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="email">Email</option>
                 <option value="phone">Phone</option>
@@ -315,9 +316,9 @@ export default function ConsultationModal({
 
           {/* Business Information */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900">Business Information</h3>
+            <h3 className="text-lg font-semibold text-primary">Business Information</h3>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-primary mb-1">
                 Business/Company Name
               </label>
               <Input
@@ -326,7 +327,7 @@ export default function ConsultationModal({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-primary mb-1">
                 Website URL
               </label>
               <Input
@@ -341,12 +342,12 @@ export default function ConsultationModal({
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-primary mb-1">
                   Company Size
                 </label>
                 <select
                   {...register('companySize')}
-                  className="w-full h-9 px-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full h-9 px-3 py-1 text-sm border border-primary bg-primary text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">Select size</option>
                   <option value="1-5">1-5 employees</option>
@@ -356,12 +357,12 @@ export default function ConsultationModal({
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-primary mb-1">
                   Implementation Timeline
                 </label>
                 <select
                   {...register('timeline')}
-                  className="w-full h-9 px-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full h-9 px-3 py-1 text-sm border border-primary bg-primary text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">Select timeline</option>
                   <option value="ASAP">ASAP</option>
@@ -372,12 +373,12 @@ export default function ConsultationModal({
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-primary mb-1">
                 Budget Range
               </label>
               <select
                 {...register('budget')}
-                className="w-full h-9 px-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full h-9 px-3 py-1 text-sm border border-primary bg-primary text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">Select budget</option>
                 <option value="<$250">Less than $250</option>
@@ -388,9 +389,9 @@ export default function ConsultationModal({
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-primary mb-1">
                 Biggest Challenge
-                <span className="text-gray-500 font-normal"> (What's your main business challenge?)</span>
+                <span className="text-secondary font-normal"> (What's your main business challenge?)</span>
               </label>
               <Textarea
                 {...register('biggestChallenge')}
@@ -402,10 +403,10 @@ export default function ConsultationModal({
 
           {/* Selected Recommendations */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-lg font-semibold text-primary">
               Selected Recommendations
             </h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-secondary">
                               Choose which recommendations you&apos;d like to discuss:
             </p>
             <div className="space-y-3 max-h-64 overflow-y-auto">
@@ -416,11 +417,11 @@ export default function ConsultationModal({
                     id={`rec-${rec.id}`}
                     checked={selectedRecommendations.includes(rec.title)}
                     onChange={() => handleRecommendationToggle(rec.title)}
-                    className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="mt-1 h-4 w-4 text-blue-600 border-primary rounded focus:ring-blue-500"
                   />
                   <label htmlFor={`rec-${rec.id}`} className="flex-1 cursor-pointer">
-                    <div className="text-sm font-medium text-gray-900">{rec.title}</div>
-                    <div className="text-xs text-gray-500">{rec.category} • {rec.difficulty}</div>
+                    <div className="text-sm font-medium text-primary">{rec.title}</div>
+                    <div className="text-xs text-secondary">{rec.category} • {rec.difficulty}</div>
                   </label>
                 </div>
               ))}
@@ -432,13 +433,13 @@ export default function ConsultationModal({
           </div>
 
           {/* Sticky Footer with CTA */}
-          <div className="border-t bg-white p-6 pt-4">
+          <div className="border-t border-primary bg-primary p-6 pt-4">
             <div className="bg-blue-50 p-4 rounded-lg mb-4">
               <p className="text-sm text-blue-800 font-medium">
                 💡 Tip: Providing more details helps us prepare a more targeted consultation for you
               </p>
             </div>
-            <p className="text-xs text-gray-500 mb-4">
+            <p className="text-xs text-secondary mb-4">
               We respect your privacy. Your information is only used to prepare for our consultation.
             </p>
             
@@ -454,7 +455,8 @@ export default function ConsultationModal({
             <Button
               type="submit"
               disabled={isSubmitting || !isFormValid}
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              variant="primary"
+              className="w-full disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <>

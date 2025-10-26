@@ -5,16 +5,35 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { User, CheckCircle, Clock, Sparkles, Camera, Utensils, Lightbulb, Star, Users, ArrowRight } from 'lucide-react';
+import { User, CheckCircle, Clock, Sparkles, Camera, Utensils, Lightbulb, Star, Users, ArrowRight, Menu, X, Brain, HelpCircle, DollarSign, MessageCircle, Shield, Zap } from 'lucide-react';
 import { EnhancedForm } from '@/components/EnhancedForm';
 import { SmoothNavigation, SectionWrapper } from '@/components/SmoothNavigation';
 import { ProgressTracker } from '@/components/ProgressTracker';
+import { ThemeToggle } from '@/components/ThemeToggle';
+import { useSmoothScroll } from '@/lib/hooks';
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
+import HomePageConsultationModal from '@/components/HomePageConsultationModal';
 
 export default function Home() {
   const [placeholderText, setPlaceholderText] = useState('');
   const [currentSuggestionIndex, setCurrentSuggestionIndex] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const [showConsultationModal, setShowConsultationModal] = useState(false);
   const router = useRouter();
+  const { scrollToSection } = useSmoothScroll();
+
+  const handleMobileNavClick = (sectionId: string) => {
+    setMobileMenuOpen(false);
+    // Small delay to allow menu to close first, then scroll
+    setTimeout(() => {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 150);
+  };
 
   const businessSuggestions = useMemo(() => [
     'I run a small bakery in downtown Portland',
@@ -79,57 +98,118 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-primary min-h-screen">
       {/* Enhanced Header */}
-      <motion.header 
+      <motion.header
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6 }}
-        className="glass-effect fixed w-full z-50"
+        className="bg-primary/80 backdrop-blur-md border-b border-primary sticky top-0 w-full z-50 shadow-sm"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <motion.div 
-              className="flex items-center space-x-2"
-              whileHover={{ scale: 1.05 }}
+            {/* Logo */}
+            <motion.div
+              className="flex items-center gap-2"
+              whileHover={{ scale: 1.02 }}
             >
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Lightbulb className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center border border-primary">
+                <Lightbulb className="w-5 h-5 text-white dark:text-black" />
               </div>
-              <span className="text-xl font-semibold text-gray-900">BrighterBiz.ai</span>
+              <span className="text-xl font-semibold text-primary">BrighterBiz.ai</span>
             </motion.div>
-            <nav className="hidden md:flex items-center space-x-8">
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-6">
               {navigationItems.slice(1).map((item) => (
-                <motion.a
+                <a
                   key={item.id}
                   href={`#${item.id}`}
-                  className="text-gray-600 hover:text-gray-900 transition-colors relative group"
-                  whileHover={{ y: -2 }}
+                  className="text-secondary hover:text-primary transition-colors duration-200 text-sm font-medium relative group px-2 py-1"
                 >
                   {item.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-300 group-hover:w-full"></span>
-                </motion.a>
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-black dark:bg-white transition-all duration-200 group-hover:w-full"></span>
+                </a>
               ))}
+              <ThemeToggle />
               <Button
                 onClick={scrollToInputField}
-                className="rounded-full bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-2 text-sm font-semibold text-white transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg"
+                variant="primary"
+                size="md"
+                className="rounded-lg"
               >
                 Try For Free
               </Button>
             </nav>
+
+            {/* Mobile Menu Button */}
+            <div className="flex md:hidden items-center gap-3">
+              <ThemeToggle />
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-2 text-secondary hover:text-primary hover:bg-tertiary rounded-lg transition-colors"
+                aria-label="Toggle menu"
+                aria-expanded={mobileMenuOpen}
+              >
+                {mobileMenuOpen ? (
+                  <X className="w-6 h-6" />
+                ) : (
+                  <Menu className="w-6 h-6" />
+                )}
+              </button>
+            </div>
           </div>
+
+          {/* Mobile Menu */}
+          <AnimatePresence>
+            {mobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+                className="md:hidden border-t border-primary overflow-hidden"
+              >
+                <nav className="py-4 space-y-2">
+                  {navigationItems.slice(1).map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => handleMobileNavClick(item.id)}
+                      className="block w-full text-left px-4 py-2.5 text-secondary hover:text-primary hover:bg-tertiary rounded-lg transition-colors text-sm font-medium"
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                  <div className="px-4 pt-2">
+                    <Button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        scrollToInputField();
+                      }}
+                      variant="primary"
+                      size="md"
+                      className="w-full rounded-lg"
+                    >
+                      Try For Free
+                    </Button>
+                  </div>
+                </nav>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.header>
 
       {/* Hero Section */}
-      <SectionWrapper id="hero" className="pt-32 pb-20 px-4">
+      <SectionWrapper id="hero" className="pt-16 md:pt-20 pb-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="inline-block mx-auto mb-6 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold px-4 py-1 shadow-sm hover-lift"
+            className="inline-flex items-center gap-1.5 mx-auto mb-6 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold px-4 py-1 shadow-sm hover-lift"
           >
+            <Brain className="w-3.5 h-3.5" />
             Powered by Advanced AI
           </motion.p>
           
@@ -137,7 +217,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-none font-[family-name:var(--font-inter)]"
+            className="text-5xl md:text-6xl font-bold text-primary mb-6 leading-none font-[family-name:var(--font-inter)]"
           >
             Free AI-powered recommendations <br/>
             <span className="gradient-text">tailored to grow your business</span>
@@ -203,7 +283,7 @@ export default function Home() {
       </SectionWrapper>
 
       {/* Features Section */}
-      <SectionWrapper id="features" className="py-20 bg-gray-50">
+      <SectionWrapper id="features" className="py-20 bg-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
@@ -211,8 +291,8 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Why BrighterBiz.ai?</h2>
-            <p className="text-xl text-gray-600">AI recommendations that actually make sense for your business</p>
+            <h2 className="text-4xl font-bold text-primary mb-4">Why BrighterBiz.ai?</h2>
+            <p className="text-xl text-secondary">AI recommendations that actually make sense for your business</p>
           </motion.div>
           
           <div className="grid md:grid-cols-3 gap-8 items-stretch">
@@ -244,15 +324,15 @@ export default function Home() {
                 whileHover={{ y: -10 }}
                 className="h-full"
               >
-                <Card className="bg-white p-8 rounded-3xl text-center border border-gray-100 card-hover float-animation flex flex-col h-full">
-                  <motion.div 
+                <Card className="bg-primary p-8 rounded-3xl text-center border border-primary card-hover float-animation flex flex-col h-full">
+                  <motion.div
                     className={`w-16 h-16 bg-gradient-to-br ${feature.gradient} rounded-full flex items-center justify-center mx-auto mb-6`}
                     whileHover={{ scale: 1.1, rotate: 5 }}
                   >
                     {feature.icon}
                   </motion.div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                  <p className="text-gray-600 flex-grow">{feature.description}</p>
+                  <h3 className="text-xl font-semibold text-primary mb-3">{feature.title}</h3>
+                  <p className="text-secondary flex-grow">{feature.description}</p>
                 </Card>
               </motion.div>
             ))}
@@ -269,14 +349,14 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">See What's Possible</h2>
-            <p className="text-xl text-gray-600">Real AI solutions for real businesses</p>
+            <h2 className="text-4xl font-bold text-primary mb-4">See What's Possible</h2>
+            <p className="text-xl text-secondary">Real AI solutions for real businesses</p>
           </motion.div>
           
           <div className="grid md:grid-cols-3 gap-6">
             {[
               {
-                icon: <Sparkles className="w-5 h-5 text-gray-600" />,
+                icon: <Sparkles className="w-5 h-5 text-secondary" />,
                 title: "Small Bakery",
                 features: [
                   {
@@ -294,7 +374,7 @@ export default function Home() {
                 ]
               },
               {
-                icon: <Utensils className="w-5 h-5 text-gray-600" />,
+                icon: <Utensils className="w-5 h-5 text-secondary" />,
                 title: "Local Restaurant",
                 features: [
                   {
@@ -312,7 +392,7 @@ export default function Home() {
                 ]
               },
               {
-                icon: <Camera className="w-5 h-5 text-gray-600" />,
+                icon: <Camera className="w-5 h-5 text-secondary" />,
                 title: "Photography Studio",
                 features: [
                   {
@@ -337,15 +417,15 @@ export default function Home() {
                 transition={{ delay: index * 0.2 }}
                 whileHover={{ y: -5 }}
               >
-                <Card className="bg-white p-6 rounded-2xl shadow-md border border-gray-100 card-hover">
+                <Card className="bg-primary p-6 rounded-2xl shadow-md border border-primary card-hover">
                   <div className="flex items-center mb-6">
-                    <motion.div 
-                      className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-3"
+                    <motion.div
+                      className="w-8 h-8 bg-tertiary rounded-lg flex items-center justify-center mr-3"
                       whileHover={{ scale: 1.1, rotate: 5 }}
                     >
                       {example.icon}
                     </motion.div>
-                    <h3 className="text-lg font-semibold text-gray-900">{example.title}</h3>
+                    <h3 className="text-lg font-semibold text-primary">{example.title}</h3>
                   </div>
                   
                   <div className="space-y-5">
@@ -357,12 +437,12 @@ export default function Home() {
                         transition={{ delay: featureIndex * 0.1 }}
                       >
                         <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-medium text-gray-900">{feature.title}</h4>
+                          <h4 className="font-medium text-primary">{feature.title}</h4>
                           <span className={`px-2 py-1 ${feature.tagColor} text-xs rounded-md font-medium`}>
                             {feature.tag}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-600">{feature.description}</p>
+                        <p className="text-sm text-secondary">{feature.description}</p>
                       </motion.div>
                     ))}
                   </div>
@@ -370,6 +450,93 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </SectionWrapper>
+
+      {/* FAQ Section */}
+      <SectionWrapper id="faq" className="py-20 bg-secondary">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary border border-primary mb-4">
+              <HelpCircle className="w-6 h-6 text-primary" />
+            </div>
+            <h2 className="text-4xl font-bold text-primary mb-4">Frequently Asked Questions</h2>
+            <p className="text-xl text-secondary">Everything you need to know about BrighterBiz.ai</p>
+          </motion.div>
+
+          <Accordion>
+            {[
+              {
+                icon: <Brain className="w-5 h-5" />,
+                question: "How does BrighterBiz.ai work?",
+                answer: "Simply describe your business in plain English, and our AI analyzes your needs to provide personalized recommendations. Our system considers your industry, business model, and specific challenges to suggest practical AI solutions that you can implement today, even without technical expertise." as any
+              },
+              {
+                icon: <DollarSign className="w-5 h-5" />,
+                question: "Is this really free?",
+                answer: "Yes, absolutely free! No credit card required, no hidden fees, and no account needed. We believe every business owner deserves access to AI insights that can help them grow. You'll get personalized recommendations at no cost." as any
+              },
+              {
+                icon: <Zap className="w-5 h-5" />,
+                question: "What kind of AI recommendations will I get?",
+                answer: "You'll receive tailored suggestions based on your specific business, including tools for automation, customer service improvements, marketing enhancement, inventory management, and more. Each recommendation includes implementation difficulty, estimated cost, and time to implement." as any
+              },
+              {
+                icon: <MessageCircle className="w-5 h-5" />,
+                question: "Do I need technical skills to use these recommendations?",
+                answer: "Not at all! We specifically provide 'Easy' level recommendations that require minimal technical knowledge. Many solutions are ready-to-use tools that you can set up in minutes, with step-by-step guidance included when available." as any
+              },
+              {
+                icon: <Shield className="w-5 h-5" />,
+                question: "Is my business information kept private?",
+                answer: "Yes, your privacy is important to us. We don't store your business description permanently, and we never sell your information. Your data is used solely to generate recommendations and is processed securely through our AI systems." as any
+              },
+              {
+                icon: <Clock className="w-5 h-5" />,
+                question: "How long does it take to get recommendations?",
+                answer: "Typically just a few seconds! After you describe your business and submit the form, our AI analyzes your information and generates customized recommendations almost instantly. You'll have your results ready to review right away." as any
+              },
+              {
+                icon: <CheckCircle className="w-5 h-5" />,
+                question: "Can I get help implementing the recommendations?",
+                answer: (
+                  <>
+                    Yes! We offer free consultation sessions where you can discuss your selected AI solutions. Our team will provide implementation guidance, help you choose the best tools for your budget and timeline, and create a custom roadmap for your business.
+                    <br />
+                    <button
+                      onClick={() => setShowConsultationModal(true)}
+                      className="mt-3 text-left text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-semibold underline transition-colors"
+                    >
+                      Schedule a Free Consultation →
+                    </button>
+                  </>
+                )
+              }
+            ].map((faq, index) => (
+              <AccordionItem key={index}>
+                <AccordionTrigger
+                  isOpen={openFaqIndex === index}
+                  onToggle={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
+                  className="text-left"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="text-primary flex-shrink-0">
+                      {faq.icon}
+                    </div>
+                    <span className="font-semibold text-primary">{faq.question}</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent isOpen={openFaqIndex === index}>
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </SectionWrapper>
 
@@ -410,30 +577,33 @@ export default function Home() {
       </SectionWrapper>
 
       {/* Footer */}
-      <motion.footer 
+      <motion.footer
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
-        className="bg-gray-900 py-8 sm:py-12"
+        className="bg-tertiary border-t border-primary py-8 sm:py-12"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
-            <motion.div 
+            <motion.div
               className="flex items-center space-x-2"
               whileHover={{ scale: 1.05 }}
             >
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center border border-primary">
+                <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-white dark:text-black" />
               </div>
-              <span className="text-white font-medium text-sm sm:text-base">BrighterBiz.ai</span>
+              <span className="text-primary font-medium text-sm sm:text-base">BrighterBiz.ai</span>
             </motion.div>
-            <p className="text-gray-400 text-xs sm:text-sm text-center sm:text-left">© 2025 BrighterBiz.ai. Making AI accessible for small business.</p>
+            <p className="text-secondary text-xs sm:text-sm text-center sm:text-left">© 2025 BrighterBiz.ai. Making AI accessible for small business.</p>
           </div>
         </div>
       </motion.footer>
 
-      {/* Smooth Navigation */}
-      <SmoothNavigation items={navigationItems} />
+      {/* Consultation Modal for Home Page */}
+      <HomePageConsultationModal
+        isOpen={showConsultationModal}
+        onClose={() => setShowConsultationModal(false)}
+      />
     </div>
   );
 }

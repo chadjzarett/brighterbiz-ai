@@ -74,10 +74,10 @@ export const SmoothNavigation = ({ items, className = '' }: SmoothNavigationProp
                     onClick={() => scrollToSection(item.id)}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
-                    className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                    className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 border ${
                       activeSection === item.id
-                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        ? 'bg-black dark:bg-white text-white dark:text-black shadow-lg border-black dark:border-white'
+                        : 'bg-tertiary text-secondary hover:bg-hover border-primary'
                     }`}
                     title={item.label}
                   >
@@ -100,7 +100,7 @@ export const SmoothNavigation = ({ items, className = '' }: SmoothNavigationProp
             onClick={scrollToTop}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="fixed bottom-6 right-6 w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-50 flex items-center justify-center"
+            className="fixed bottom-6 right-6 w-12 h-12 bg-black dark:bg-white text-white dark:text-black rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-50 flex items-center justify-center border border-primary"
             title="Scroll to top"
           >
             <ChevronUp className="w-5 h-5" />

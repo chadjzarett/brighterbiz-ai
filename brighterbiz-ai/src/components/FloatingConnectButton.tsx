@@ -80,7 +80,8 @@ export default function FloatingConnectButton({ onConnectClick }: FloatingConnec
                     </p>
                     <Button
                       onClick={handleClick}
-                      className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white text-sm py-2 px-3 rounded-lg"
+                      variant="primary"
+                      className="w-full text-sm py-2 px-3 rounded-lg"
                     >
                       Schedule Consultation
                     </Button>
@@ -94,7 +95,7 @@ export default function FloatingConnectButton({ onConnectClick }: FloatingConnec
               onClick={() => setIsExpanded(!isExpanded)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group relative"
+              className="w-14 h-14 bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group relative border border-primary"
               title="Need help implementing these solutions?"
             >
               <Calendar className="w-6 h-6" />

@@ -9,6 +9,7 @@ import { ProgressTracker, AnimatedProgressBar } from '@/components/ProgressTrack
 import ConnectWithMeSection from '@/components/ConnectWithMeSection';
 import FloatingConnectButton from '@/components/FloatingConnectButton';
 import ConsultationModal from '@/components/ConsultationModal';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import {
   ArrowLeft, Clock, DollarSign, BarChart3, Loader2, Lightbulb, Mail, Megaphone,
   MessageCircle, Users, Settings, CalendarCheck, Instagram, CheckCircle2, ChevronUp
@@ -141,32 +142,53 @@ export default function ResultsPage() {
   };
 
   const getCategoryColor = (category: string) => {
+    // Minimal color approach - subtle backgrounds with better dark mode support
     const colors = {
-      'Customer Service': 'bg-green-100 text-green-700',
-      'Marketing': 'bg-pink-100 text-pink-700',
-      'Operations': 'bg-blue-100 text-blue-700',
-      'Analytics': 'bg-purple-100 text-purple-700',
-      'Automation': 'bg-orange-100 text-orange-700',
-      'Sales': 'bg-yellow-100 text-yellow-700',
-      'Content Creation': 'bg-indigo-100 text-indigo-700',
-      'Finance': 'bg-teal-100 text-teal-700',
-      'HR & Hiring': 'bg-rose-100 text-rose-700',
-      'Legal & Compliance': 'bg-gray-100 text-gray-700',
-      'Productivity': 'bg-cyan-100 text-cyan-700',
-      'E-commerce': 'bg-fuchsia-100 text-fuchsia-700',
-      'Customer Insights': 'bg-lime-100 text-lime-700',
-      'IT & Security': 'bg-red-100 text-red-700'
+      'Customer Service': 'bg-green-500/10 text-green-700 dark:bg-green-500/20 dark:text-green-400',
+      'Marketing': 'bg-pink-500/10 text-pink-700 dark:bg-pink-500/20 dark:text-pink-400',
+      'Operations': 'bg-blue-500/10 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400',
+      'Analytics': 'bg-purple-500/10 text-purple-700 dark:bg-purple-500/20 dark:text-purple-400',
+      'Automation': 'bg-orange-500/10 text-orange-700 dark:bg-orange-500/20 dark:text-orange-400',
+      'Sales': 'bg-yellow-500/10 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400',
+      'Content Creation': 'bg-indigo-500/10 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-400',
+      'Finance': 'bg-teal-500/10 text-teal-700 dark:bg-teal-500/20 dark:text-teal-400',
+      'HR & Hiring': 'bg-rose-500/10 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400',
+      'Legal & Compliance': 'bg-gray-500/10 text-gray-700 dark:bg-gray-500/20 dark:text-gray-400',
+      'Productivity': 'bg-cyan-500/10 text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-400',
+      'E-commerce': 'bg-fuchsia-500/10 text-fuchsia-700 dark:bg-fuchsia-500/20 dark:text-fuchsia-400',
+      'Customer Insights': 'bg-lime-500/10 text-lime-700 dark:bg-lime-500/20 dark:text-lime-400',
+      'IT & Security': 'bg-red-500/10 text-red-700 dark:bg-red-500/20 dark:text-red-400'
     };
-    return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-700';
+    return colors[category as keyof typeof colors] || 'bg-gray-500/10 text-gray-700 dark:bg-gray-500/20 dark:text-gray-400';
   };
 
-  const getDifficultyColor = (difficulty: string) => {
-    const colors = {
-      'Easy': 'text-green-600 bg-green-100',
-      'Medium': 'text-orange-600 bg-orange-100',
-      'Advanced': 'text-red-600 bg-red-100',
+  const getDifficultyConfig = (difficulty: string) => {
+    const configs = {
+      'Easy': {
+        bg: 'bg-green-500/10 dark:bg-green-500/20',
+        text: 'text-green-700 dark:text-green-400',
+        icon: '✓',
+        label: 'Easy to implement'
+      },
+      'Medium': {
+        bg: 'bg-amber-500/10 dark:bg-amber-500/20',
+        text: 'text-amber-700 dark:text-amber-400',
+        icon: '◆',
+        label: 'Moderate difficulty'
+      },
+      'Advanced': {
+        bg: 'bg-red-500/10 dark:bg-red-500/20',
+        text: 'text-red-700 dark:text-red-400',
+        icon: '★',
+        label: 'Advanced implementation'
+      },
     };
-    return colors[difficulty as keyof typeof colors] || 'text-gray-600 bg-gray-100';
+    return configs[difficulty as keyof typeof configs] || {
+      bg: 'bg-gray-500/10',
+      text: 'text-gray-700 dark:text-gray-400',
+      icon: '○',
+      label: difficulty
+    };
   };
 
   const sortRecommendationsByDifficulty = (recommendations: Recommendation[]) => {
@@ -273,8 +295,8 @@ export default function ResultsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <motion.div 
+      <div className="min-h-screen bg-secondary flex items-center justify-center px-4">
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center max-w-sm sm:max-w-md w-full"
@@ -285,21 +307,21 @@ export default function ResultsPage() {
           >
             <Loader2 className="w-12 h-12 sm:w-16 sm:h-16 text-blue-500 mx-auto mb-4 sm:mb-6" />
           </motion.div>
-          
-          <motion.h2 
+
+          <motion.h2
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4"
+            className="text-2xl sm:text-3xl font-bold text-primary mb-3 sm:mb-4"
           >
             Analyzing your business...
           </motion.h2>
-          
-          <motion.p 
+
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="text-gray-600 mb-6 sm:mb-8 text-sm sm:text-base"
+            className="text-secondary mb-6 sm:mb-8 text-sm sm:text-base"
           >
             Our AI is generating personalized recommendations for you.
           </motion.p>
@@ -329,28 +351,29 @@ export default function ResultsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <motion.div 
+      <div className="min-h-screen bg-secondary flex items-center justify-center px-4">
+        <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="text-center max-w-sm sm:max-w-md w-full"
         >
-          <motion.div 
+          <motion.div
             className="w-16 h-16 sm:w-20 sm:h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6"
             animate={{ scale: [1, 1.1, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
             <span className="text-red-600 text-2xl sm:text-3xl">⚠️</span>
           </motion.div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">Something went wrong</h2>
-          <p className="text-gray-600 mb-6 sm:mb-8 text-sm sm:text-base">{error}</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-3 sm:mb-4">Something went wrong</h2>
+          <p className="text-secondary mb-6 sm:mb-8 text-sm sm:text-base">{error}</p>
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Button 
-              onClick={() => router.push('/')} 
-              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 sm:px-8 py-3 rounded-xl shadow-lg w-full sm:w-auto"
+            <Button
+              onClick={() => router.push('/')}
+              variant="primary"
+              className="px-6 sm:px-8 py-3 rounded-xl shadow-lg w-full sm:w-auto"
             >
               <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
               Try Again
@@ -362,69 +385,68 @@ export default function ResultsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-secondary">
       {/* Enhanced Header */}
-      <motion.header 
+      <motion.header
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6 }}
-        className="glass-effect border-b border-gray-200"
+        className="bg-primary/80 backdrop-blur-md border-b border-primary sticky top-0 w-full z-50 shadow-sm"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
-          <div className="flex items-center justify-between">
-            <motion.div 
-              className="flex items-center space-x-2"
-              whileHover={{ scale: 1.05 }}
-            >
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-              </div>
-              <span className="text-lg sm:text-xl font-semibold text-gray-900">BrighterBiz.ai</span>
-            </motion.div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2"
+              whileHover={{ scale: 1.02 }}
             >
-              <Button 
-                variant="outline" 
-                onClick={() => router.push('/')}
-                className="flex items-center space-x-1 sm:space-x-2 btn-premium text-xs sm:text-sm px-3 sm:px-4 py-2"
-              >
-                <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span>New Search</span>
-              </Button>
+              <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center border border-primary">
+                <Lightbulb className="w-5 h-5 text-white dark:text-black" />
+              </div>
+              <span className="text-xl font-semibold text-primary">BrighterBiz.ai</span>
             </motion.div>
+            <div className="flex items-center gap-6">
+              <ThemeToggle />
+              <Button
+                onClick={() => router.push('/')}
+                variant="primary"
+                size="md"
+                className="rounded-lg flex items-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                New Search
+              </Button>
+            </div>
           </div>
         </div>
       </motion.header>
 
       {/* Hero Section */}
-      <motion.section 
+      <motion.section
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="max-w-4xl mx-auto text-center pt-8 sm:pt-12 pb-6 sm:pb-8 px-4"
       >
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-3 sm:mb-4 leading-tight">
           AI Recommendations for Your Business
         </h1>
-        <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
+        <p className="text-base sm:text-lg text-secondary max-w-2xl mx-auto">
           Tailored solutions to help your business grow and improve your results.
         </p>
       </motion.section>
 
       {/* Business Description */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
         className="max-w-4xl mx-auto mb-6 sm:mb-8 px-4"
       >
-        <div className="bg-white p-3 sm:p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
+        <div className="bg-primary p-3 sm:p-4 rounded-xl border border-primary shadow-sm hover:shadow-md transition-all duration-300">
           {isStructuredData && formData ? (
             <div className="space-y-3">
               <div className="text-center mb-4">
-                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                <h3 className="text-lg sm:text-xl font-bold text-primary mb-2">
                   {formData.businessName}
                 </h3>
                 <div className="flex flex-wrap justify-center gap-2 mb-3">
@@ -442,46 +464,46 @@ export default function ResultsPage() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="font-medium text-gray-700">Primary Goals:</span>
+                  <span className="font-medium text-primary">Primary Goals:</span>
                   <div className="mt-1 flex flex-wrap gap-1">
                     {formData.primaryGoals.map((goal: string, index: number) => (
-                      <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
+                      <span key={index} className="px-2 py-1 bg-tertiary text-secondary rounded text-xs">
                         {goal}
                       </span>
                     ))}
                   </div>
                 </div>
-                
+
                 <div>
-                  <span className="font-medium text-gray-700">Focus Areas:</span>
+                  <span className="font-medium text-primary">Focus Areas:</span>
                   <div className="mt-1 flex flex-wrap gap-1">
                     {formData.focusAreas.map((area: string, index: number) => (
-                      <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
+                      <span key={index} className="px-2 py-1 bg-tertiary text-secondary rounded text-xs">
                         {area}
                       </span>
                     ))}
                   </div>
                 </div>
-                
+
                 <div>
-                  <span className="font-medium text-gray-700">Budget:</span>
-                  <span className="ml-2 text-gray-600">{formData.budget}/month</span>
+                  <span className="font-medium text-primary">Budget:</span>
+                  <span className="ml-2 text-secondary">{formData.budget}/month</span>
                 </div>
-                
+
                 <div>
-                  <span className="font-medium text-gray-700">Timeline:</span>
-                  <span className="ml-2 text-gray-600">{formData.timeline}</span>
+                  <span className="font-medium text-primary">Timeline:</span>
+                  <span className="ml-2 text-secondary">{formData.timeline}</span>
                 </div>
               </div>
-              
-              <div className="pt-2 border-t border-gray-100">
-                <p className="text-gray-600 text-sm italic">
+
+              <div className="pt-2 border-t border-primary">
+                <p className="text-secondary text-sm italic">
                   "{formData.businessDescription}"
                 </p>
               </div>
             </div>
           ) : (
-            <p className="text-gray-800 text-sm sm:text-base font-semibold text-center break-words">
+            <p className="text-primary text-sm sm:text-base font-semibold text-center break-words">
               Your Business: <span className="text-blue-600">"{businessDescription}"</span>
             </p>
           )}
@@ -494,51 +516,47 @@ export default function ResultsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-stretch">
           {sortRecommendationsByDifficulty(recommendations).map((recommendation, index) => {
             const Icon = getRecommendationIcon(recommendation);
+            const difficultyConfig = getDifficultyConfig(recommendation.difficulty);
             return (
               <motion.div
                 key={recommendation.id}
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
                 className="h-full"
               >
-                <Card className="bg-white p-4 sm:p-6 rounded-2xl shadow-md border border-gray-200 card-hover flex flex-col h-full">
+                <Card className="bg-primary p-4 sm:p-6 rounded-xl shadow-md border border-primary hover:border-secondary hover:shadow-lg transition-all duration-200 flex flex-col h-full">
                   {/* Card Header */}
                   <div>
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-start mr-3 sm:mr-4 flex-1">
-                        <motion.div 
-                          className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-50 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0"
-                          whileHover={{ scale: 1.1, rotate: 5 }}
-                        >
-                          <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
-                        </motion.div>
-                        <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-tight">
+                    <div className="flex items-start justify-between gap-4 mb-4">
+                      <div className="flex items-center gap-3 flex-1">
+                        <div className="w-10 h-10 bg-tertiary rounded-lg flex items-center justify-center text-secondary flex-shrink-0">
+                          <Icon className="w-5 h-5" />
+                        </div>
+                        <h3 className="text-base sm:text-lg font-semibold text-primary leading-tight">
                           {recommendation.title}
                         </h3>
                       </div>
-                      <motion.span 
-                        className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium ml-2 whitespace-nowrap ${getCategoryColor(recommendation.category)}`}
-                        whileHover={{ scale: 1.05 }}
+                      <span
+                        className={`px-2.5 py-1 rounded-md text-xs font-medium whitespace-nowrap flex items-center gap-1 ${getCategoryColor(recommendation.category)}`}
                       >
                         {recommendation.category}
-                      </motion.span>
+                      </span>
                     </div>
                   </div>
 
                   {/* Card Body (flexible) */}
                   <div className="flex-grow">
-                    <p className="text-gray-600 mb-4 text-sm leading-relaxed">
+                    <p className="text-secondary mb-4 text-sm leading-relaxed">
                       {recommendation.description}
                     </p>
                   </div>
-                  
+
                   {/* Card Footer */}
-                  <div className="mt-auto pt-4 border-t border-gray-100">
+                  <div className="mt-auto pt-4 border-t border-primary">
                     <div className="min-h-[85px] sm:min-h-[85px]">
                       <div className="flex items-center text-sm mb-3">
-                        <span className="text-gray-500 font-medium">Suggested Tools:</span>
+                        <span className="text-secondary font-medium">Suggested Tools:</span>
                       </div>
                       <div className="flex flex-wrap gap-2 mb-4">
                         {getSuggestedTools(recommendation).map((tool, toolIndex) => (
@@ -547,42 +565,46 @@ export default function ResultsPage() {
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: toolIndex * 0.05 }}
-                            className="px-2 sm:px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full font-medium hover:bg-gray-200 transition-colors"
+                            className="px-2 sm:px-3 py-0.5 bg-tertiary text-secondary text-xs rounded-md font-medium hover:bg-hover transition-colors"
                           >
                             {tool}
                           </motion.span>
                         ))}
                       </div>
                     </div>
-                    
-                    <div className="border-t border-gray-100 pt-4 space-y-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-6 text-sm">
+
+                    <div className="border-t border-primary pt-4 space-y-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-6 text-sm">
                       <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <BarChart3 className="w-4 h-4 text-gray-600" />
+                        <div className="w-8 h-8 bg-tertiary rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <BarChart3 className="w-4 h-4 text-secondary" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <span className="text-gray-500 block text-xs font-medium mb-1">Difficulty</span>
-                          <span className={`inline-flex items-center font-medium rounded-full px-3 py-1 text-xs ${getDifficultyColor(recommendation.difficulty)}`}>
+                          <span className="text-secondary block text-xs font-medium mb-1">Difficulty</span>
+                          <span
+                            className={`inline-flex items-center gap-1 font-medium rounded-md px-2.5 py-1 text-xs ${difficultyConfig.bg} ${difficultyConfig.text}`}
+                            aria-label={difficultyConfig.label}
+                          >
+                            <span aria-hidden="true">{difficultyConfig.icon}</span>
                             {recommendation.difficulty}
                           </span>
                         </div>
                       </div>
                       <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <DollarSign className="w-4 h-4 text-gray-600" />
+                        <div className="w-8 h-8 bg-tertiary rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <DollarSign className="w-4 h-4 text-secondary" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <span className="text-gray-500 block text-xs font-medium mb-1">Est. Cost</span>
-                          <span className="font-semibold text-gray-900 text-sm">{recommendation.estimatedCost}</span>
+                          <span className="text-secondary block text-xs font-medium mb-1">Est. Cost</span>
+                          <span className="font-semibold text-primary text-sm">{recommendation.estimatedCost}</span>
                         </div>
                       </div>
                       <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <Clock className="w-4 h-4 text-gray-600" />
+                        <div className="w-8 h-8 bg-tertiary rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <Clock className="w-4 h-4 text-secondary" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <span className="text-gray-500 block text-xs font-medium mb-1">Timeline</span>
-                          <span className="font-semibold text-gray-900 text-sm">{recommendation.timeToImplement}</span>
+                          <span className="text-secondary block text-xs font-medium mb-1">Timeline</span>
+                          <span className="font-semibold text-primary text-sm">{recommendation.timeToImplement}</span>
                         </div>
                       </div>
                     </div>
@@ -598,20 +620,20 @@ export default function ResultsPage() {
       </main>
 
       {/* Enhanced Footer */}
-      <motion.footer 
+      <motion.footer
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
-        className="bg-gray-900 py-8 sm:py-12 mt-16 sm:mt-20"
+        className="bg-gray-900 dark:bg-gray-950 py-8 sm:py-12 mt-16 sm:mt-20"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <motion.div 
+            <motion.div
               className="flex items-center space-x-2"
               whileHover={{ scale: 1.05 }}
             >
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-lg flex items-center justify-center border border-white">
+                <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-black" />
               </div>
               <span className="text-white font-medium text-sm sm:text-base">BrighterBiz.ai</span>
             </motion.div>
@@ -634,7 +656,7 @@ export default function ResultsPage() {
           onClick={scrollToTop}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-11 h-11 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-50 flex items-center justify-center"
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-11 h-11 sm:w-12 sm:h-12 bg-black dark:bg-white text-white dark:text-black rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-50 flex items-center justify-center border border-primary"
           title="Scroll to top"
         >
           <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5" />
