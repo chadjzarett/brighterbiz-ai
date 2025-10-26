@@ -14,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { CheckCircle2, Loader2, X } from 'lucide-react';
+import { CheckCircle2, Loader2 } from 'lucide-react';
 
 // Simplified form validation schema for home page
 const consultationFormSchema = z.object({
@@ -113,69 +113,82 @@ export default function HomePageConsultationModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-primary border border-primary rounded-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-semibold text-primary">
-            Schedule Your Free Consultation
-          </DialogTitle>
-          <DialogDescription className="text-secondary">
-            Get personalized help implementing AI in your business
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-hidden flex flex-col p-0 bg-primary border border-primary rounded-2xl shadow-xl">
+        {/* Sticky Header */}
+        <div className="sticky top-0 z-10 bg-primary border-b border-primary px-6 py-4 rounded-t-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold text-primary">
+              Schedule Your Free Consultation
+            </DialogTitle>
+            <DialogDescription className="text-sm text-secondary mt-1">
+              Get personalized help implementing AI in your business
+            </DialogDescription>
+          </DialogHeader>
+        </div>
 
         {showSuccess ? (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <CheckCircle2 className="w-16 h-16 text-green-600 mb-4" />
-            <h3 className="text-2xl font-semibold text-primary mb-2">
+          <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
+            <div className="w-16 h-16 bg-success-bg rounded-full flex items-center justify-center mb-4">
+              <CheckCircle2 className="w-8 h-8 text-accent-success" />
+            </div>
+            <h3 className="text-2xl font-semibold text-primary mb-3">
               Thanks! We'll Be In Touch Soon
             </h3>
-            <p className="text-secondary max-w-md">
+            <p className="text-secondary max-w-md leading-relaxed">
               We've received your consultation request and will reach out within 24-48 hours.
             </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0">
+            {/* Scrollable Form Content */}
+            <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
             {/* Contact Information */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-primary border-b border-primary pb-2">
-                Contact Information
-              </h3>
-              
-              <div className="grid grid-cols-2 gap-4">
+              <h3 className="text-lg font-semibold text-primary">Contact Information</h3>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="firstName" className="block text-sm font-medium text-primary mb-1">
-                    First Name <span className="text-red-500">*</span>
+                  <label htmlFor="firstName" className="block text-sm font-medium text-secondary mb-2">
+                    First Name <span className="text-accent-error">*</span>
                   </label>
                   <Input
                     id="firstName"
                     {...register('firstName')}
                     className="bg-tertiary border-primary"
                     placeholder="John"
+                    aria-invalid={!!errors.firstName}
+                    aria-describedby={errors.firstName ? 'firstName-error' : undefined}
                   />
                   {errors.firstName && (
-                    <p className="text-sm text-red-500 mt-1">{errors.firstName.message}</p>
+                    <p id="firstName-error" role="alert" className="text-accent-error text-xs mt-2">
+                      {errors.firstName.message}
+                    </p>
                   )}
                 </div>
 
                 <div>
-                  <label htmlFor="lastName" className="block text-sm font-medium text-primary mb-1">
-                    Last Name <span className="text-red-500">*</span>
+                  <label htmlFor="lastName" className="block text-sm font-medium text-secondary mb-2">
+                    Last Name <span className="text-accent-error">*</span>
                   </label>
                   <Input
                     id="lastName"
                     {...register('lastName')}
                     className="bg-tertiary border-primary"
                     placeholder="Doe"
+                    aria-invalid={!!errors.lastName}
+                    aria-describedby={errors.lastName ? 'lastName-error' : undefined}
                   />
                   {errors.lastName && (
-                    <p className="text-sm text-red-500 mt-1">{errors.lastName.message}</p>
+                    <p id="lastName-error" role="alert" className="text-accent-error text-xs mt-2">
+                      {errors.lastName.message}
+                    </p>
                   )}
                 </div>
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-primary mb-1">
-                  Email <span className="text-red-500">*</span>
+                <label htmlFor="email" className="block text-sm font-medium text-secondary mb-2">
+                  Email Address <span className="text-accent-error">*</span>
                 </label>
                 <Input
                   id="email"
@@ -183,35 +196,39 @@ export default function HomePageConsultationModal({
                   {...register('email')}
                   className="bg-tertiary border-primary"
                   placeholder="john@example.com"
+                  aria-invalid={!!errors.email}
+                  aria-describedby={errors.email ? 'email-error' : undefined}
                 />
                 {errors.email && (
-                  <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
+                  <p id="email-error" role="alert" className="text-accent-error text-xs mt-2">
+                    {errors.email.message}
+                  </p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-primary mb-1">
-                  Phone (Optional)
+                <label htmlFor="phone" className="block text-sm font-medium text-secondary mb-2">
+                  Phone Number
+                  <span className="text-tertiary font-normal"> (optional)</span>
                 </label>
                 <Input
                   id="phone"
                   type="tel"
                   {...register('phone')}
                   className="bg-tertiary border-primary"
-                  placeholder="(555) 123-4567"
+                  placeholder="+1 (555) 123-4567"
                 />
               </div>
             </div>
 
             {/* Business Information */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-primary border-b border-primary pb-2">
-                Business Information
-              </h3>
+              <h3 className="text-lg font-semibold text-primary">Business Information</h3>
 
               <div>
-                <label htmlFor="businessName" className="block text-sm font-medium text-primary mb-1">
-                  Business Name (Optional)
+                <label htmlFor="businessName" className="block text-sm font-medium text-secondary mb-2">
+                  Business Name
+                  <span className="text-tertiary font-normal"> (optional)</span>
                 </label>
                 <Input
                   id="businessName"
@@ -222,42 +239,48 @@ export default function HomePageConsultationModal({
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-primary mb-1">
+                <label htmlFor="message" className="block text-sm font-medium text-secondary mb-2">
                   Tell us about your business or what you'd like help with
                 </label>
                 <Textarea
                   id="message"
                   {...register('message')}
-                  className="bg-tertiary border-primary min-h-[100px]"
+                  className="bg-tertiary border-primary min-h-[100px] resize-none"
                   placeholder="Describe your business and what you'd like to learn about..."
                 />
               </div>
             </div>
+            </div>
 
-            {/* Submit Button */}
-            <div className="flex justify-end gap-3 pt-4 border-t border-primary">
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={onClose}
-                disabled={isSubmitting}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                variant="primary"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Submitting...
-                  </>
-                ) : (
-                  'Request Consultation'
-                )}
-              </Button>
+            {/* Sticky Footer */}
+            <div className="sticky bottom-0 z-10 bg-primary border-t border-primary px-6 py-4 rounded-b-2xl">
+              <p className="text-xs text-secondary mb-3">
+                We respect your privacy. Your information is only used to prepare for our consultation.
+              </p>
+              <div className="flex items-center justify-end gap-3">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={onClose}
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  variant="primary"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    'Schedule Consultation'
+                  )}
+                </Button>
+              </div>
             </div>
           </form>
         )}

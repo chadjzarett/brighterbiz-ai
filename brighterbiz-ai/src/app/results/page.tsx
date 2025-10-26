@@ -596,25 +596,28 @@ function ResultsContent() {
         <ConnectWithMeSection onConnectClick={handleConnectClick} />
       </main>
 
-      {/* Enhanced Footer */}
+      {/* Footer */}
       <motion.footer
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
-        className="bg-gray-900 dark:bg-gray-950 py-8 sm:py-12 mt-16 sm:mt-20"
+        className="bg-primary border-t border-primary py-12 mt-16 sm:mt-20"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col items-center justify-center gap-6 text-center">
+            {/* Logo */}
             <motion.div
-              className="flex items-center space-x-2"
-              whileHover={{ scale: 1.05 }}
+              className="flex items-center gap-2"
+              whileHover={{ scale: 1.02 }}
             >
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-lg flex items-center justify-center border border-white">
-                <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-black" />
+              <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center border border-primary">
+                <Lightbulb className="w-5 h-5 text-white dark:text-black" />
               </div>
-              <span className="text-white font-medium text-sm sm:text-base">BrighterBiz.ai</span>
+              <span className="text-xl font-semibold text-primary">BrighterBiz.ai</span>
             </motion.div>
-            <p className="text-gray-400 text-xs sm:text-sm text-center">
+
+            {/* Copyright */}
+            <p className="text-secondary text-sm">
               © 2025 BrighterBiz.ai. Making AI accessible for small business.
             </p>
           </div>

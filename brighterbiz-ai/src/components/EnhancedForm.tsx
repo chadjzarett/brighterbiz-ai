@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
 import { AlertCircle, Send } from 'lucide-react';
 import { useFormValidation, useLoadingState } from '@/lib/hooks';
 import { AnimatedProgressBar } from './ProgressTracker';

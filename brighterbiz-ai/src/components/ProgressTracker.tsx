@@ -45,12 +45,12 @@ export const ProgressTracker = ({ steps, currentStep, className = '' }: Progress
               </motion.div>
               <div className="mt-2 text-center">
                 <p className={`text-xs font-medium ${
-                  index <= currentStep ? 'text-gray-900' : 'text-gray-400'
+                  index <= currentStep ? 'text-primary' : 'text-tertiary'
                 }`}>
                   {step.label}
                 </p>
                 {step.description && (
-                  <p className="text-xs text-gray-500 mt-1">{step.description}</p>
+                  <p className="text-xs text-secondary mt-1">{step.description}</p>
                 )}
               </div>
             </div>
@@ -109,7 +109,7 @@ export const AnimatedProgressBar = ({
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-sm text-gray-600 mt-2 text-center"
+          className="text-sm text-secondary mt-2 text-center"
         >
           {Math.round(progress)}% Complete
         </motion.p>

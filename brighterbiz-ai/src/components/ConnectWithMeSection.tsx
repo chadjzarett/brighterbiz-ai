@@ -17,21 +17,21 @@ export default function ConnectWithMeSection({ onConnectClick }: ConnectWithMeSe
       className="mt-16 sm:mt-20 text-center"
       data-connect-section
     >
-      <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 sm:p-10 rounded-3xl shadow-lg border border-blue-100 card-hover">
-        <motion.h2 
+      <div className="bg-primary p-6 sm:p-10 rounded-xl shadow-md border border-primary hover:shadow-lg transition-all duration-200">
+        <motion.h2
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4"
+          className="text-2xl sm:text-3xl font-bold text-primary mb-3 sm:mb-4"
         >
           Need Help Implementing These Solutions?
         </motion.h2>
-        
-        <motion.p 
+
+        <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto text-base sm:text-lg"
+          className="text-secondary mb-6 sm:mb-8 max-w-2xl mx-auto text-base sm:text-lg"
         >
           Get personalized guidance from an AI implementation expert. Free 30-minute consultation to discuss your specific needs and create an action plan.
         </motion.p>

@@ -7,10 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { User, CheckCircle, Clock, Sparkles, Camera, Utensils, Lightbulb, Star, Users, ArrowRight, Menu, X, Brain, HelpCircle, DollarSign, MessageCircle, Shield, Zap } from 'lucide-react';
 import { EnhancedForm } from '@/components/EnhancedForm';
-import { SmoothNavigation, SectionWrapper } from '@/components/SmoothNavigation';
+import { SectionWrapper } from '@/components/SmoothNavigation';
 import { ProgressTracker } from '@/components/ProgressTracker';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { useSmoothScroll } from '@/lib/hooks';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 import HomePageConsultationModal from '@/components/HomePageConsultationModal';
 
@@ -22,7 +21,6 @@ export default function Home() {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [showConsultationModal, setShowConsultationModal] = useState(false);
   const router = useRouter();
-  const { scrollToSection } = useSmoothScroll();
 
   const handleMobileNavClick = (sectionId: string) => {
     setMobileMenuOpen(false);
@@ -110,15 +108,16 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             {/* Logo */}
-            <motion.div
-              className="flex items-center gap-2"
+            <motion.button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="flex items-center gap-2 cursor-pointer"
               whileHover={{ scale: 1.02 }}
             >
               <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center border border-primary">
                 <Lightbulb className="w-5 h-5 text-white dark:text-black" />
               </div>
               <span className="text-xl font-semibold text-primary">BrighterBiz.ai</span>
-            </motion.div>
+            </motion.button>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-6">
@@ -214,14 +213,14 @@ export default function Home() {
             Powered by Advanced AI
           </motion.p>
           
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
             className="text-5xl md:text-6xl font-bold text-primary mb-6 leading-none font-[family-name:var(--font-inter)]"
           >
             Free AI-powered recommendations <br/>
-            <span className="gradient-text">tailored to grow your business</span>
+            <span className="text-blue-600 dark:text-blue-400">tailored to grow your business</span>
           </motion.h1>
           
           <motion.p 
@@ -302,102 +301,44 @@ export default function Home() {
                 icon: <User className="w-7 h-7" />,
                 title: "Tailored",
                 description: "Every recommendation is specifically designed for your industry and business model.",
-                colorClass: 'indigo'
+                iconBg: 'bg-indigo-100 dark:bg-indigo-500/20',
+                iconColor: 'text-indigo-700 dark:text-indigo-400'
               },
               {
                 icon: <CheckCircle className="w-7 h-7" />,
                 title: "Easy to Understand",
                 description: "No tech jargon. Just clear, actionable advice you can implement today.",
-                colorClass: 'blue'
+                iconBg: 'bg-blue-100 dark:bg-blue-500/20',
+                iconColor: 'text-blue-700 dark:text-blue-400'
               },
               {
                 icon: <Clock className="w-7 h-7" />,
                 title: "Actionable Insights",
                 description: "Get specific tools and next steps, not just vague suggestions.",
-                colorClass: 'emerald'
+                iconBg: 'bg-emerald-100 dark:bg-emerald-500/20',
+                iconColor: 'text-emerald-700 dark:text-emerald-400'
               }
-            ].map((feature, index) => {
-              // Define color maps for light and dark modes
-              const colorMap: Record<string, { light: string; dark: string; iconBg: { light: string; dark: string }; iconText: { light: string; dark: string } }> = {
-                indigo: {
-                  light: 'rgba(99, 102, 241, 0.10)',
-                  dark: 'rgba(129, 140, 248, 0.08)',
-                  iconBg: { light: 'rgb(224, 231, 255)', dark: 'rgba(99, 102, 241, 0.15)' },
-                  iconText: { light: 'rgb(79, 70, 229)', dark: 'rgb(129, 140, 248)' }
-                },
-                blue: {
-                  light: 'rgba(59, 130, 246, 0.10)',
-                  dark: 'rgba(96, 165, 250, 0.08)',
-                  iconBg: { light: 'rgb(219, 234, 254)', dark: 'rgba(59, 130, 246, 0.15)' },
-                  iconText: { light: 'rgb(37, 99, 235)', dark: 'rgb(96, 165, 250)' }
-                },
-                emerald: {
-                  light: 'rgba(16, 185, 129, 0.10)',
-                  dark: 'rgba(52, 211, 153, 0.08)',
-                  iconBg: { light: 'rgb(209, 250, 229)', dark: 'rgba(16, 185, 129, 0.15)' },
-                  iconText: { light: 'rgb(5, 150, 105)', dark: 'rgb(52, 211, 153)' }
-                }
-              };
-
-              const colors = colorMap[feature.colorClass];
-
-              return (
-                <motion.div
-                  key={feature.title}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.2 }}
-                  whileHover={{ y: -10 }}
-                  className="h-full"
-                >
-                  <Card
-                    className="bg-primary p-8 rounded-3xl text-center border border-primary card-hover float-animation flex flex-col h-full relative overflow-hidden"
-                    style={{
-                      background: `linear-gradient(135deg, ${colors.light}, transparent), var(--color-primary)`
-                    }}
+            ].map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.2 }}
+                whileHover={{ y: -2 }}
+                className="h-full"
+              >
+                <Card className="bg-primary p-8 rounded-xl text-center border border-primary hover:border-secondary hover:shadow-md transition-all duration-200 flex flex-col h-full">
+                  <motion.div
+                    className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 ${feature.iconBg} ${feature.iconColor}`}
+                    whileHover={{ scale: 1.05 }}
                   >
-                    {/* Dark mode overlay */}
-                    <div
-                      className="absolute inset-0 pointer-events-none opacity-0 dark:opacity-100 transition-opacity duration-300"
-                      style={{
-                        background: `linear-gradient(135deg, ${colors.dark}, transparent)`
-                      }}
-                      aria-hidden="true"
-                    />
-
-                    <motion.div
-                      className="relative w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 transition-all duration-300"
-                      style={{
-                        backgroundColor: colors.iconBg.light,
-                        color: colors.iconText.light
-                      }}
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                    >
-                      {/* Dark mode icon background - using a second div with dark mode classes */}
-                      <div
-                        className="absolute inset-0 rounded-full opacity-0 dark:opacity-100 transition-opacity duration-300"
-                        style={{ backgroundColor: colors.iconBg.dark }}
-                        aria-hidden="true"
-                      />
-                      <span
-                        className="relative z-10 dark:hidden"
-                        style={{ color: colors.iconText.light }}
-                      >
-                        {feature.icon}
-                      </span>
-                      <span
-                        className="relative z-10 hidden dark:inline-block"
-                        style={{ color: colors.iconText.dark }}
-                      >
-                        {feature.icon}
-                      </span>
-                    </motion.div>
-                    <h3 className="text-xl font-semibold text-primary mb-3 relative">{feature.title}</h3>
-                    <p className="text-secondary flex-grow relative">{feature.description}</p>
-                  </Card>
-                </motion.div>
-              );
-            })}
+                    {feature.icon}
+                  </motion.div>
+                  <h3 className="text-xl font-semibold text-primary mb-3">{feature.title}</h3>
+                  <p className="text-secondary flex-grow">{feature.description}</p>
+                </Card>
+              </motion.div>
+            ))}
           </div>
         </div>
       </SectionWrapper>
@@ -477,9 +418,9 @@ export default function Home() {
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.2 }}
-                whileHover={{ y: -5 }}
+                whileHover={{ y: -2 }}
               >
-                <Card className="bg-primary p-6 rounded-2xl shadow-md border border-primary card-hover">
+                <Card className="bg-primary p-6 rounded-xl shadow-md border border-primary card-hover">
                   <div className="flex items-center mb-6">
                     <motion.div
                       className="w-8 h-8 bg-tertiary rounded-lg flex items-center justify-center mr-3"
@@ -603,13 +544,13 @@ export default function Home() {
       </SectionWrapper>
 
       {/* CTA Section */}
-      <SectionWrapper id="cta" className="py-20 bg-black">
+      <SectionWrapper id="cta" className="py-20 bg-black dark:bg-white">
         <div className="max-w-4xl mx-auto text-center px-4 flex flex-col items-center justify-center">
           <motion.h2 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-[2.5rem] md:text-[3.5rem] font-extrabold text-white mb-6 leading-tight"
+            className="text-[2.5rem] md:text-[3.5rem] font-extrabold text-white dark:text-black mb-6 leading-tight"
           >
             Start for free today!<br />
           </motion.h2>
@@ -617,7 +558,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-base md:text-lg text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed"
+            className="text-base md:text-lg text-gray-300 dark:text-gray-700 mb-10 max-w-2xl mx-auto leading-relaxed"
           >
             Join thousands of small business owners who are already using AI to save<br />
             time, reduce costs, and grow faster.
@@ -629,7 +570,7 @@ export default function Home() {
           >
             <Button
               onClick={scrollToInputField}
-              className="btn-premium px-7 py-3 text-base text-black font-semibold rounded-xl bg-white border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center min-h-[48px] mx-auto hover:-translate-y-1"
+              className="btn-premium px-7 py-3 text-base text-black dark:text-white font-semibold rounded-xl bg-white dark:bg-black border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 hover:border-gray-400 dark:hover:border-gray-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center min-h-[48px] mx-auto hover:-translate-y-1"
             >
               <span>Try For Free</span>
               <ArrowRight className="w-4 h-4 ml-2" />
@@ -643,20 +584,26 @@ export default function Home() {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
-        className="bg-tertiary border-t border-primary py-8 sm:py-12"
+        className="bg-primary border-t border-primary py-12"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
-            <motion.div
-              className="flex items-center space-x-2"
-              whileHover={{ scale: 1.05 }}
+          <div className="flex flex-col items-center justify-center gap-6 text-center">
+            {/* Logo */}
+            <motion.button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="flex items-center gap-2 cursor-pointer"
+              whileHover={{ scale: 1.02 }}
             >
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center border border-primary">
-                <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-white dark:text-black" />
+              <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center border border-primary">
+                <Lightbulb className="w-5 h-5 text-white dark:text-black" />
               </div>
-              <span className="text-primary font-medium text-sm sm:text-base">BrighterBiz.ai</span>
-            </motion.div>
-            <p className="text-secondary text-xs sm:text-sm text-center sm:text-left">© 2025 BrighterBiz.ai. Making AI accessible for small business.</p>
+              <span className="text-xl font-semibold text-primary">BrighterBiz.ai</span>
+            </motion.button>
+
+            {/* Copyright */}
+            <p className="text-secondary text-sm">
+              © 2025 BrighterBiz.ai. Making AI accessible for small business.
+            </p>
           </div>
         </div>
       </motion.footer>

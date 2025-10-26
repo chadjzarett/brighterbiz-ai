@@ -176,7 +176,7 @@ export default function ConsultationModal({
   if (showSuccess) {
     return (
       <Dialog open={isOpen} onOpenChange={handleClose}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md bg-primary border border-primary rounded-2xl shadow-xl">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -186,32 +186,32 @@ export default function ConsultationModal({
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: 'spring', stiffness: 150 }}
-              className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"
+              className="w-16 h-16 bg-success-bg rounded-full flex items-center justify-center mx-auto mb-4"
             >
-              <CheckCircle2 className="w-8 h-8 text-green-600" />
+              <CheckCircle2 className="w-8 h-8 text-accent-success" />
             </motion.div>
-            <h3 className="text-2xl font-bold text-primary mb-2">
+            <h3 className="text-2xl font-semibold text-primary mb-3">
               Thanks! We'll Be In Touch Soon
             </h3>
-            <p className="text-secondary mb-6">
+            <p className="text-secondary mb-6 leading-relaxed">
               We&apos;ve received your consultation request and our AI is already analyzing your business needs.
               Expect a personalized follow-up within 24-48 hours with:
             </p>
-            <div className="text-left space-y-2 mb-6">
-              <div className="flex items-start space-x-2">
-                <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+            <div className="text-left space-y-3 mb-6">
+              <div className="flex items-start space-x-3">
+                <CheckCircle2 className="w-5 h-5 text-accent-success mt-0.5 flex-shrink-0" />
                 <span className="text-sm text-primary">Custom implementation roadmap for your selected AI solutions</span>
               </div>
-              <div className="flex items-start space-x-2">
-                <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+              <div className="flex items-start space-x-3">
+                <CheckCircle2 className="w-5 h-5 text-accent-success mt-0.5 flex-shrink-0" />
                 <span className="text-sm text-primary">Specific tool recommendations based on your budget and timeline</span>
               </div>
-              <div className="flex items-start space-x-2">
-                <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+              <div className="flex items-start space-x-3">
+                <CheckCircle2 className="w-5 h-5 text-accent-success mt-0.5 flex-shrink-0" />
                 <span className="text-sm text-primary">Next steps to get started with the highest-impact recommendations</span>
               </div>
             </div>
-            <p className="text-sm text-secondary mb-4">
+            <p className="text-sm text-secondary mb-6">
               Check your email for confirmation details.
             </p>
             <Button
@@ -229,84 +229,103 @@ export default function ConsultationModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col p-0">
-        <div className="p-6 pb-0">
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-hidden flex flex-col p-0 bg-primary border border-primary rounded-2xl shadow-xl">
+        {/* Sticky Header */}
+        <div className="sticky top-0 z-10 bg-primary border-b border-primary px-6 py-4 rounded-t-2xl">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-primary">
-              Let&apos;s Discuss Your AI Implementation
+            <DialogTitle className="text-xl font-semibold text-primary">
+              Schedule Your Free Consultation
             </DialogTitle>
-            <DialogDescription className="text-secondary">
-              Tell us about your business so we can provide the most relevant guidance
+            <DialogDescription className="text-sm text-secondary mt-1">
+              Get personalized help implementing AI in your business
             </DialogDescription>
           </DialogHeader>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0">
           {/* Scrollable Form Content */}
-          <div className="flex-1 overflow-y-auto px-6 space-y-6">
+          <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
           {/* Contact Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-primary">Contact Information</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-primary mb-1">
-                  First Name *
+                <label htmlFor="firstName" className="block text-sm font-medium text-secondary mb-2">
+                  First Name <span className="text-accent-error">*</span>
                 </label>
                 <Input
+                  id="firstName"
                   {...register('firstName')}
                   placeholder="John"
-                  className={errors.firstName ? 'border-red-500' : ''}
+                  className="bg-tertiary border-primary"
+                  aria-invalid={!!errors.firstName}
+                  aria-describedby={errors.firstName ? 'firstName-error' : undefined}
                 />
                 {errors.firstName && (
-                  <p className="text-red-500 text-xs mt-1">{errors.firstName.message}</p>
+                  <p id="firstName-error" role="alert" className="text-accent-error text-xs mt-2">
+                    {errors.firstName.message}
+                  </p>
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-primary mb-1">
-                  Last Name *
+                <label htmlFor="lastName" className="block text-sm font-medium text-secondary mb-2">
+                  Last Name <span className="text-accent-error">*</span>
                 </label>
                 <Input
+                  id="lastName"
                   {...register('lastName')}
                   placeholder="Doe"
-                  className={errors.lastName ? 'border-red-500' : ''}
+                  className="bg-tertiary border-primary"
+                  aria-invalid={!!errors.lastName}
+                  aria-describedby={errors.lastName ? 'lastName-error' : undefined}
                 />
                 {errors.lastName && (
-                  <p className="text-red-500 text-xs mt-1">{errors.lastName.message}</p>
+                  <p id="lastName-error" role="alert" className="text-accent-error text-xs mt-2">
+                    {errors.lastName.message}
+                  </p>
                 )}
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-primary mb-1">
-                Email Address *
+              <label htmlFor="email" className="block text-sm font-medium text-secondary mb-2">
+                Email Address <span className="text-accent-error">*</span>
               </label>
               <Input
+                id="email"
                 {...register('email')}
                 type="email"
                 placeholder="john@example.com"
-                className={errors.email ? 'border-red-500' : ''}
+                className="bg-tertiary border-primary"
+                aria-invalid={!!errors.email}
+                aria-describedby={errors.email ? 'email-error' : undefined}
               />
               {errors.email && (
-                <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+                <p id="email-error" role="alert" className="text-accent-error text-xs mt-2">
+                  {errors.email.message}
+                </p>
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-primary mb-1">
+              <label htmlFor="phone" className="block text-sm font-medium text-secondary mb-2">
                 Phone Number
-                <span className="text-secondary font-normal"> (for faster follow-up)</span>
+                <span className="text-tertiary font-normal"> (optional)</span>
               </label>
               <Input
+                id="phone"
                 {...register('phone')}
                 type="tel"
                 placeholder="+1 (555) 123-4567"
+                className="bg-tertiary border-primary"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-primary mb-1">
+              <label htmlFor="preferredContactMethod" className="block text-sm font-medium text-secondary mb-2">
                 Preferred Contact Method
               </label>
               <select
+                id="preferredContactMethod"
                 {...register('preferredContactMethod')}
-                className="w-full h-9 px-3 py-1 text-sm border border-primary bg-primary text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full h-10 px-3 py-2 text-sm border border-primary bg-tertiary text-primary rounded-lg focus:outline-none focus:border-accent-primary focus:ring-4 focus:ring-blue-500/10 transition-all duration-200"
               >
                 <option value="email">Email</option>
                 <option value="phone">Phone</option>
@@ -318,36 +337,44 @@ export default function ConsultationModal({
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-primary">Business Information</h3>
             <div>
-              <label className="block text-sm font-medium text-primary mb-1">
+              <label htmlFor="businessName" className="block text-sm font-medium text-secondary mb-2">
                 Business/Company Name
               </label>
               <Input
+                id="businessName"
                 {...register('businessName')}
                 placeholder="Your Business Name"
+                className="bg-tertiary border-primary"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-primary mb-1">
+              <label htmlFor="website" className="block text-sm font-medium text-secondary mb-2">
                 Website URL
               </label>
               <Input
+                id="website"
                 {...register('website')}
                 type="url"
                 placeholder="https://yourwebsite.com"
-                className={errors.website ? 'border-red-500' : ''}
+                className="bg-tertiary border-primary"
+                aria-invalid={!!errors.website}
+                aria-describedby={errors.website ? 'website-error' : undefined}
               />
               {errors.website && (
-                <p className="text-red-500 text-xs mt-1">{errors.website.message}</p>
+                <p id="website-error" role="alert" className="text-accent-error text-xs mt-2">
+                  {errors.website.message}
+                </p>
               )}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-primary mb-1">
+                <label htmlFor="companySize" className="block text-sm font-medium text-secondary mb-2">
                   Company Size
                 </label>
                 <select
+                  id="companySize"
                   {...register('companySize')}
-                  className="w-full h-9 px-3 py-1 text-sm border border-primary bg-primary text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full h-10 px-3 py-2 text-sm border border-primary bg-tertiary text-primary rounded-lg focus:outline-none focus:border-accent-primary focus:ring-4 focus:ring-blue-500/10 transition-all duration-200"
                 >
                   <option value="">Select size</option>
                   <option value="1-5">1-5 employees</option>
@@ -357,12 +384,13 @@ export default function ConsultationModal({
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-primary mb-1">
+                <label htmlFor="timeline" className="block text-sm font-medium text-secondary mb-2">
                   Implementation Timeline
                 </label>
                 <select
+                  id="timeline"
                   {...register('timeline')}
-                  className="w-full h-9 px-3 py-1 text-sm border border-primary bg-primary text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full h-10 px-3 py-2 text-sm border border-primary bg-tertiary text-primary rounded-lg focus:outline-none focus:border-accent-primary focus:ring-4 focus:ring-blue-500/10 transition-all duration-200"
                 >
                   <option value="">Select timeline</option>
                   <option value="ASAP">ASAP</option>
@@ -373,12 +401,13 @@ export default function ConsultationModal({
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-primary mb-1">
+              <label htmlFor="budget" className="block text-sm font-medium text-secondary mb-2">
                 Budget Range
               </label>
               <select
+                id="budget"
                 {...register('budget')}
-                className="w-full h-9 px-3 py-1 text-sm border border-primary bg-primary text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full h-10 px-3 py-2 text-sm border border-primary bg-tertiary text-primary rounded-lg focus:outline-none focus:border-accent-primary focus:ring-4 focus:ring-blue-500/10 transition-all duration-200"
               >
                 <option value="">Select budget</option>
                 <option value="<$250">Less than $250</option>
@@ -389,14 +418,15 @@ export default function ConsultationModal({
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-primary mb-1">
+              <label htmlFor="biggestChallenge" className="block text-sm font-medium text-secondary mb-2">
                 Biggest Challenge
-                <span className="text-secondary font-normal"> (What's your main business challenge?)</span>
+                <span className="text-tertiary font-normal"> (optional)</span>
               </label>
               <Textarea
+                id="biggestChallenge"
                 {...register('biggestChallenge')}
                 placeholder="Describe your biggest business challenge..."
-                className="min-h-20"
+                className="min-h-20 bg-tertiary border-primary resize-none"
               />
             </div>
           </div>
@@ -407,68 +437,73 @@ export default function ConsultationModal({
               Selected Recommendations
             </h3>
             <p className="text-sm text-secondary">
-                              Choose which recommendations you&apos;d like to discuss:
+              Choose which recommendations you&apos;d like to discuss:
             </p>
-            <div className="space-y-3 max-h-64 overflow-y-auto">
+            <div className="space-y-3 max-h-64 overflow-y-auto pr-2">
               {recommendations.map((rec) => (
-                <div key={rec.id} className="flex items-start space-x-3">
+                <div key={rec.id} className="flex items-start space-x-3 p-3 bg-tertiary border border-primary rounded-lg hover:border-secondary transition-colors duration-200">
                   <input
                     type="checkbox"
                     id={`rec-${rec.id}`}
                     checked={selectedRecommendations.includes(rec.title)}
                     onChange={() => handleRecommendationToggle(rec.title)}
-                    className="mt-1 h-4 w-4 text-blue-600 border-primary rounded focus:ring-blue-500"
+                    className="mt-1 h-4 w-4 text-accent-primary border-primary rounded focus:ring-2 focus:ring-blue-500/50"
                   />
                   <label htmlFor={`rec-${rec.id}`} className="flex-1 cursor-pointer">
                     <div className="text-sm font-medium text-primary">{rec.title}</div>
-                    <div className="text-xs text-secondary">{rec.category} • {rec.difficulty}</div>
+                    <div className="text-xs text-secondary mt-1">{rec.category} • {rec.difficulty}</div>
                   </label>
                 </div>
               ))}
             </div>
             {errors.selectedRecommendations && (
-              <p className="text-red-500 text-xs">{errors.selectedRecommendations.message}</p>
+              <p role="alert" className="text-accent-error text-xs mt-2">
+                {errors.selectedRecommendations.message}
+              </p>
             )}
           </div>
           </div>
 
           {/* Sticky Footer with CTA */}
-          <div className="border-t border-primary bg-primary p-6 pt-4">
-            <div className="bg-blue-50 p-4 rounded-lg mb-4">
-              <p className="text-sm text-blue-800 font-medium">
-                💡 Tip: Providing more details helps us prepare a more targeted consultation for you
-              </p>
-            </div>
-            <p className="text-xs text-secondary mb-4">
+          <div className="sticky bottom-0 z-10 bg-primary border-t border-primary px-6 py-4 rounded-b-2xl">
+            <p className="text-xs text-secondary mb-3">
               We respect your privacy. Your information is only used to prepare for our consultation.
             </p>
-            
+
             {/* Error Message */}
             {submitError && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
-                <p className="text-red-700 text-sm font-medium">
+              <div className="bg-error-bg border border-accent-error/20 rounded-lg p-3 mb-3">
+                <p className="text-error-text text-sm font-medium">
                   {submitError}
                 </p>
               </div>
             )}
-            
-            <Button
-              type="submit"
-              disabled={isSubmitting || !isFormValid}
-              variant="primary"
-              className="w-full disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Submitting Request...
-                </>
-              ) : !isFormValid ? (
-                'Please fill required fields'
-              ) : (
-                'Request Free Consultation'
-              )}
-            </Button>
+
+            <div className="flex items-center justify-end gap-3">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={handleClose}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isSubmitting || !isFormValid}
+                variant="primary"
+                className="disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  'Schedule Consultation'
+                )}
+              </Button>
+            </div>
           </div>
         </form>
       </DialogContent>
