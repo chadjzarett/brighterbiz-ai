@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,7 @@ import ConsultationModal from '@/components/ConsultationModal';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import {
   ArrowLeft, Clock, DollarSign, BarChart3, Loader2, Lightbulb, Mail, Megaphone,
-  MessageCircle, Users, Settings, CalendarCheck, Instagram, CheckCircle2, ChevronUp
+  MessageCircle, Users, Settings, CalendarCheck, CheckCircle2, ChevronUp, Share2
 } from 'lucide-react';
 
 interface Recommendation {
@@ -41,7 +41,7 @@ interface FormData {
   additionalInfo?: string;
 }
 
-export default function ResultsPage() {
+function ResultsContent() {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [businessDescription, setBusinessDescription] = useState('');
   const [isStructuredData, setIsStructuredData] = useState(false);
@@ -51,7 +51,7 @@ export default function ResultsPage() {
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const [showConsultationModal, setShowConsultationModal] = useState(false);
-  
+
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -212,7 +212,7 @@ export default function ResultsPage() {
     if (title.match(/review|sentiment/)) return MessageCircle;
     if (title.match(/customer|client|patient/)) return Users;
     if (title.match(/automation|tool|auto/)) return Settings;
-    if (title.match(/social|post|instagram/)) return Instagram;
+    if (title.match(/social|post|instagram/)) return Share2;
     if (title.match(/payment|invoice|cost|price/)) return DollarSign;
     if (title.match(/complete|done|success/)) return CheckCircle2;
     if (category.match(/analytics/)) return BarChart3;
@@ -525,89 +525,66 @@ export default function ResultsPage() {
                 transition={{ delay: index * 0.1 }}
                 className="h-full"
               >
-                <Card className="bg-primary p-4 sm:p-6 rounded-xl shadow-md border border-primary hover:border-secondary hover:shadow-lg transition-all duration-200 flex flex-col h-full">
+                <Card className="bg-primary p-6 rounded-xl border border-primary hover:border-secondary hover:shadow-md transition-all duration-200 flex flex-col h-full">
                   {/* Card Header */}
-                  <div>
-                    <div className="flex items-start justify-between gap-4 mb-4">
-                      <div className="flex items-center gap-3 flex-1">
-                        <div className="w-10 h-10 bg-tertiary rounded-lg flex items-center justify-center text-secondary flex-shrink-0">
-                          <Icon className="w-5 h-5" />
-                        </div>
-                        <h3 className="text-base sm:text-lg font-semibold text-primary leading-tight">
-                          {recommendation.title}
-                        </h3>
+                  <div className="flex items-start justify-between gap-4 mb-4">
+                    <div className="flex items-center gap-3 flex-1">
+                      <div className="w-10 h-10 bg-tertiary rounded-lg flex items-center justify-center text-secondary flex-shrink-0">
+                        <Icon className="w-5 h-5" />
                       </div>
-                      <span
-                        className={`px-2.5 py-1 rounded-md text-xs font-medium whitespace-nowrap flex items-center gap-1 ${getCategoryColor(recommendation.category)}`}
-                      >
-                        {recommendation.category}
-                      </span>
+                      <h3 className="text-lg font-semibold text-primary leading-tight">
+                        {recommendation.title}
+                      </h3>
                     </div>
+                    <span
+                      className={`px-2.5 py-1 rounded-md text-xs font-medium whitespace-nowrap ${getCategoryColor(recommendation.category)}`}
+                    >
+                      {recommendation.category}
+                    </span>
                   </div>
 
-                  {/* Card Body (flexible) */}
+                  {/* Card Body */}
                   <div className="flex-grow">
-                    <p className="text-secondary mb-4 text-sm leading-relaxed">
+                    <p className="text-sm text-secondary mb-4 leading-relaxed">
                       {recommendation.description}
                     </p>
                   </div>
 
-                  {/* Card Footer */}
-                  <div className="mt-auto pt-4 border-t border-primary">
-                    <div className="min-h-[85px] sm:min-h-[85px]">
-                      <div className="flex items-center text-sm mb-3">
-                        <span className="text-secondary font-medium">Suggested Tools:</span>
-                      </div>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {getSuggestedTools(recommendation).map((tool, toolIndex) => (
-                          <motion.span
-                            key={toolIndex}
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: toolIndex * 0.05 }}
-                            className="px-2 sm:px-3 py-0.5 bg-tertiary text-secondary text-xs rounded-md font-medium hover:bg-hover transition-colors"
-                          >
-                            {tool}
-                          </motion.span>
-                        ))}
-                      </div>
+                  {/* Suggested Tools */}
+                  <div className="mb-4">
+                    <span className="text-xs font-medium text-tertiary block mb-2">Suggested Tools</span>
+                    <div className="flex flex-wrap gap-2">
+                      {getSuggestedTools(recommendation).map((tool, toolIndex) => (
+                        <span
+                          key={toolIndex}
+                          className="px-2 py-1 bg-tertiary text-secondary text-xs rounded-md font-medium hover:bg-hover transition-colors"
+                        >
+                          {tool}
+                        </span>
+                      ))}
                     </div>
+                  </div>
 
-                    <div className="border-t border-primary pt-4 space-y-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-6 text-sm">
-                      <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-tertiary rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <BarChart3 className="w-4 h-4 text-secondary" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <span className="text-secondary block text-xs font-medium mb-1">Difficulty</span>
-                          <span
-                            className={`inline-flex items-center gap-1 font-medium rounded-md px-2.5 py-1 text-xs ${difficultyConfig.bg} ${difficultyConfig.text}`}
-                            aria-label={difficultyConfig.label}
-                          >
-                            <span aria-hidden="true">{difficultyConfig.icon}</span>
-                            {recommendation.difficulty}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-tertiary rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <DollarSign className="w-4 h-4 text-secondary" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <span className="text-secondary block text-xs font-medium mb-1">Est. Cost</span>
-                          <span className="font-semibold text-primary text-sm">{recommendation.estimatedCost}</span>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-tertiary rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <Clock className="w-4 h-4 text-secondary" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <span className="text-secondary block text-xs font-medium mb-1">Timeline</span>
-                          <span className="font-semibold text-primary text-sm">{recommendation.timeToImplement}</span>
-                        </div>
-                      </div>
-                    </div>
+                  {/* Meta Information */}
+                  <div className="mt-auto pt-4 border-t border-primary flex items-center gap-4 text-xs text-tertiary">
+                    <span className="flex items-center gap-1.5">
+                      <BarChart3 className="w-3.5 h-3.5" />
+                      <span
+                        className={`inline-flex items-center gap-1 font-medium rounded-md px-2 py-0.5 ${difficultyConfig.bg} ${difficultyConfig.text}`}
+                        aria-label={difficultyConfig.label}
+                      >
+                        <span aria-hidden="true">{difficultyConfig.icon}</span>
+                        {recommendation.difficulty}
+                      </span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5" />
+                      <span className="font-medium text-primary">{recommendation.timeToImplement}</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <DollarSign className="w-3.5 h-3.5" />
+                      <span className="font-medium text-primary">{recommendation.estimatedCost}</span>
+                    </span>
                   </div>
                 </Card>
               </motion.div>
@@ -671,5 +648,31 @@ export default function ResultsPage() {
         recommendations={recommendations}
       />
     </div>
+  );
+}
+
+export default function ResultsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-secondary flex items-center justify-center px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center max-w-sm sm:max-w-md w-full"
+        >
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          >
+            <Loader2 className="w-12 h-12 sm:w-16 sm:h-16 text-blue-500 mx-auto mb-4 sm:mb-6" />
+          </motion.div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-3 sm:mb-4">
+            Loading...
+          </h2>
+        </motion.div>
+      </div>
+    }>
+      <ResultsContent />
+    </Suspense>
   );
 } 

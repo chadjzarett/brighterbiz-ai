@@ -55,7 +55,8 @@ export default function Home() {
   const navigationItems = [
     { id: 'hero', label: 'Home', icon: <Star className="w-5 h-5" /> },
     { id: 'features', label: 'Features', icon: <Star className="w-5 h-5" /> },
-    { id: 'examples', label: 'Examples', icon: <Users className="w-5 h-5" /> }
+    { id: 'examples', label: 'Examples', icon: <Users className="w-5 h-5" /> },
+    { id: 'faq', label: 'FAQ', icon: <Brain className="w-5 h-5" /> }
   ];
 
   useEffect(() => {
@@ -298,44 +299,105 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-8 items-stretch">
             {[
               {
-                icon: <User className="w-7 h-7 text-white" />,
+                icon: <User className="w-7 h-7" />,
                 title: "Tailored",
                 description: "Every recommendation is specifically designed for your industry and business model.",
-                gradient: "from-indigo-500 to-purple-600"
+                colorClass: 'indigo'
               },
               {
-                icon: <CheckCircle className="w-7 h-7 text-white" />,
+                icon: <CheckCircle className="w-7 h-7" />,
                 title: "Easy to Understand",
                 description: "No tech jargon. Just clear, actionable advice you can implement today.",
-                gradient: "from-cyan-500 to-blue-500"
+                colorClass: 'blue'
               },
               {
-                icon: <Clock className="w-7 h-7 text-white" />,
+                icon: <Clock className="w-7 h-7" />,
                 title: "Actionable Insights",
                 description: "Get specific tools and next steps, not just vague suggestions.",
-                gradient: "from-emerald-500 to-teal-600"
+                colorClass: 'emerald'
               }
-            ].map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.2 }}
-                whileHover={{ y: -10 }}
-                className="h-full"
-              >
-                <Card className="bg-primary p-8 rounded-3xl text-center border border-primary card-hover float-animation flex flex-col h-full">
-                  <motion.div
-                    className={`w-16 h-16 bg-gradient-to-br ${feature.gradient} rounded-full flex items-center justify-center mx-auto mb-6`}
-                    whileHover={{ scale: 1.1, rotate: 5 }}
+            ].map((feature, index) => {
+              // Define color maps for light and dark modes
+              const colorMap: Record<string, { light: string; dark: string; iconBg: { light: string; dark: string }; iconText: { light: string; dark: string } }> = {
+                indigo: {
+                  light: 'rgba(99, 102, 241, 0.10)',
+                  dark: 'rgba(129, 140, 248, 0.08)',
+                  iconBg: { light: 'rgb(224, 231, 255)', dark: 'rgba(99, 102, 241, 0.15)' },
+                  iconText: { light: 'rgb(79, 70, 229)', dark: 'rgb(129, 140, 248)' }
+                },
+                blue: {
+                  light: 'rgba(59, 130, 246, 0.10)',
+                  dark: 'rgba(96, 165, 250, 0.08)',
+                  iconBg: { light: 'rgb(219, 234, 254)', dark: 'rgba(59, 130, 246, 0.15)' },
+                  iconText: { light: 'rgb(37, 99, 235)', dark: 'rgb(96, 165, 250)' }
+                },
+                emerald: {
+                  light: 'rgba(16, 185, 129, 0.10)',
+                  dark: 'rgba(52, 211, 153, 0.08)',
+                  iconBg: { light: 'rgb(209, 250, 229)', dark: 'rgba(16, 185, 129, 0.15)' },
+                  iconText: { light: 'rgb(5, 150, 105)', dark: 'rgb(52, 211, 153)' }
+                }
+              };
+
+              const colors = colorMap[feature.colorClass];
+
+              return (
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.2 }}
+                  whileHover={{ y: -10 }}
+                  className="h-full"
+                >
+                  <Card
+                    className="bg-primary p-8 rounded-3xl text-center border border-primary card-hover float-animation flex flex-col h-full relative overflow-hidden"
+                    style={{
+                      background: `linear-gradient(135deg, ${colors.light}, transparent), var(--color-primary)`
+                    }}
                   >
-                    {feature.icon}
-                  </motion.div>
-                  <h3 className="text-xl font-semibold text-primary mb-3">{feature.title}</h3>
-                  <p className="text-secondary flex-grow">{feature.description}</p>
-                </Card>
-              </motion.div>
-            ))}
+                    {/* Dark mode overlay */}
+                    <div
+                      className="absolute inset-0 pointer-events-none opacity-0 dark:opacity-100 transition-opacity duration-300"
+                      style={{
+                        background: `linear-gradient(135deg, ${colors.dark}, transparent)`
+                      }}
+                      aria-hidden="true"
+                    />
+
+                    <motion.div
+                      className="relative w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 transition-all duration-300"
+                      style={{
+                        backgroundColor: colors.iconBg.light,
+                        color: colors.iconText.light
+                      }}
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                    >
+                      {/* Dark mode icon background - using a second div with dark mode classes */}
+                      <div
+                        className="absolute inset-0 rounded-full opacity-0 dark:opacity-100 transition-opacity duration-300"
+                        style={{ backgroundColor: colors.iconBg.dark }}
+                        aria-hidden="true"
+                      />
+                      <span
+                        className="relative z-10 dark:hidden"
+                        style={{ color: colors.iconText.light }}
+                      >
+                        {feature.icon}
+                      </span>
+                      <span
+                        className="relative z-10 hidden dark:inline-block"
+                        style={{ color: colors.iconText.dark }}
+                      >
+                        {feature.icon}
+                      </span>
+                    </motion.div>
+                    <h3 className="text-xl font-semibold text-primary mb-3 relative">{feature.title}</h3>
+                    <p className="text-secondary flex-grow relative">{feature.description}</p>
+                  </Card>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </SectionWrapper>
@@ -474,32 +536,32 @@ export default function Home() {
               {
                 icon: <Brain className="w-5 h-5" />,
                 question: "How does BrighterBiz.ai work?",
-                answer: "Simply describe your business in plain English, and our AI analyzes your needs to provide personalized recommendations. Our system considers your industry, business model, and specific challenges to suggest practical AI solutions that you can implement today, even without technical expertise." as any
+                answer: "Simply describe your business in plain English, and our AI analyzes your needs to provide personalized recommendations. Our system considers your industry, business model, and specific challenges to suggest practical AI solutions that you can implement today, even without technical expertise."
               },
               {
                 icon: <DollarSign className="w-5 h-5" />,
                 question: "Is this really free?",
-                answer: "Yes, absolutely free! No credit card required, no hidden fees, and no account needed. We believe every business owner deserves access to AI insights that can help them grow. You'll get personalized recommendations at no cost." as any
+                answer: "Yes, absolutely free! No credit card required, no hidden fees, and no account needed. We believe every business owner deserves access to AI insights that can help them grow. You'll get personalized recommendations at no cost."
               },
               {
                 icon: <Zap className="w-5 h-5" />,
                 question: "What kind of AI recommendations will I get?",
-                answer: "You'll receive tailored suggestions based on your specific business, including tools for automation, customer service improvements, marketing enhancement, inventory management, and more. Each recommendation includes implementation difficulty, estimated cost, and time to implement." as any
+                answer: "You'll receive tailored suggestions based on your specific business, including tools for automation, customer service improvements, marketing enhancement, inventory management, and more. Each recommendation includes implementation difficulty, estimated cost, and time to implement."
               },
               {
                 icon: <MessageCircle className="w-5 h-5" />,
                 question: "Do I need technical skills to use these recommendations?",
-                answer: "Not at all! We specifically provide 'Easy' level recommendations that require minimal technical knowledge. Many solutions are ready-to-use tools that you can set up in minutes, with step-by-step guidance included when available." as any
+                answer: "Not at all! We specifically provide 'Easy' level recommendations that require minimal technical knowledge. Many solutions are ready-to-use tools that you can set up in minutes, with step-by-step guidance included when available."
               },
               {
                 icon: <Shield className="w-5 h-5" />,
                 question: "Is my business information kept private?",
-                answer: "Yes, your privacy is important to us. We don't store your business description permanently, and we never sell your information. Your data is used solely to generate recommendations and is processed securely through our AI systems." as any
+                answer: "Yes, your privacy is important to us. We don't store your business description permanently, and we never sell your information. Your data is used solely to generate recommendations and is processed securely through our AI systems."
               },
               {
                 icon: <Clock className="w-5 h-5" />,
                 question: "How long does it take to get recommendations?",
-                answer: "Typically just a few seconds! After you describe your business and submit the form, our AI analyzes your information and generates customized recommendations almost instantly. You'll have your results ready to review right away." as any
+                answer: "Typically just a few seconds! After you describe your business and submit the form, our AI analyzes your information and generates customized recommendations almost instantly. You'll have your results ready to review right away."
               },
               {
                 icon: <CheckCircle className="w-5 h-5" />,
