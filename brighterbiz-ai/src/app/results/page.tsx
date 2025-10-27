@@ -20,6 +20,7 @@ interface Recommendation {
   title: string;
   description: string;
   category: string;
+  suggestedTools: string[];
   difficulty: string;
   estimatedCost: string;
   timeToImplement: string;
@@ -224,65 +225,8 @@ function ResultsContent() {
   };
 
   const getSuggestedTools = (recommendation: Recommendation) => {
-    const category = recommendation.category.toLowerCase();
-    const description = recommendation.description.toLowerCase();
-
-    const tools = new Set<string>();
-
-    // Add ChatGPT for most recommendations as it's versatile
-    tools.add('ChatGPT');
-
-    // Add tools based on category and content
-    if (category.includes('automation') || description.includes('automate')) {
-      tools.add('Make.com');
-      tools.add('Zapier');
-    }
-
-    if (category.includes('marketing') || description.includes('social') || description.includes('post')) {
-      tools.add('Canva');
-      tools.add('Buffer');
-    }
-
-    if (description.includes('analytics') || description.includes('data') || description.includes('report')) {
-      tools.add('Google Analytics');
-      tools.add('Tableau');
-    }
-
-    if (description.includes('schedule') || description.includes('booking') || description.includes('appointment')) {
-      tools.add('Calendly');
-      tools.add('Acuity');
-    }
-
-    if (description.includes('payment') || description.includes('invoice')) {
-      tools.add('Stripe');
-      tools.add('Square');
-    }
-
-    if (description.includes('email') || description.includes('newsletter')) {
-      tools.add('Mailchimp');
-      tools.add('ConvertKit');
-    }
-
-    if (description.includes('chat') || description.includes('support')) {
-      tools.add('Intercom');
-      tools.add('Crisp');
-    }
-
-    if (description.includes('crm') || description.includes('customer')) {
-      tools.add('HubSpot');
-      tools.add('Salesforce');
-    }
-
-    // Add some common tools based on difficulty
-    if (recommendation.difficulty === 'Easy') {
-      tools.add('Google Workspace');
-    }
-
-    if (recommendation.difficulty === 'Advanced') {
-      tools.add('Custom API');
-    }
-
-    return Array.from(tools);
+    // Use the AI-generated suggested tools from the recommendation
+    return recommendation.suggestedTools || [];
   };
 
   const scrollToTop = () => {

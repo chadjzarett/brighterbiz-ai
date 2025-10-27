@@ -10,6 +10,7 @@ interface Recommendation {
   title: string;
   description: string;
   category: string;
+  suggestedTools: string[];
   difficulty: string;
   estimatedCost: string;
   timeToImplement: string;
@@ -87,29 +88,56 @@ export async function POST(request: NextRequest) {
 }
 
 async function generateRecommendations(businessDescription: string): Promise<Recommendation[]> {
-  const prompt = `You are an AI business consultant specializing in practical AI implementations for small businesses like data entry, lead generation, marketing, social media, customer service, etc.
+  const prompt = `
+You are an AI Business Consultant who helps small and medium-sized business owners discover realistic AI solutions to reduce costs, save time, or grow their business.
 
 Business Description: "${businessDescription}"
 
-Based on this business description, provide exactly 3-4 specific, actionable AI use case or AI automation ideas that would genuinely benefit this particular business.  AI use cases are specific AI implementations that would benefit the business, while AI automation ideas are ideas for automating business processes.
+Your task is to generate exactly 4 practical AI recommendations that would provide measurable business value for THIS business.
 
-For each recommendation, provide:
-1. A clear, descriptive title (max 6 words)
-2. A practical description of how it works and benefits THIS specific business (2-3 sentences)
-3. A category from: Customer Service, Marketing, Operations, Analytics, Automation, Content Creation, Sales, Finance, HR & Hiring, Legal & Compliance, Productivity, E-commerce, Customer Insights, or IT & Security.  AI use cases are in the category of Customer Service, Marketing, Operations, Analytics, Content Creation, Sales, Finance, HR & Hiring, Legal & Compliance, Productivity, E-commerce, Customer Insights, or IT & Security.  AI automation ideas are in the category of Automation like data entry, customer service, etc.
-4. Difficulty level: Easy, Medium, or Advanced
-5. Monthly cost estimate in format "$X-Y/month" (be realistic for small businesses)
-6. Time to implement in format "X-Y weeks"
+Each recommendation should be either:
+- An **AI Use Case** (e.g., chatbot, analytics, AI marketing assistant), or
+- An **AI Automation Idea** (e.g., automate scheduling, lead follow-up, or inventory tracking)
 
-Focus on:
-- Solutions that are actually implementable with current technology and are not too complex for small businesses to implement.
-- Clear, measurable business value for THIS specific business type. 
-- Appropriate for small business budgets ($20-500/month range)
-- Industry-specific recommendations, not generic suggestions. 
-- Prioritize Easy and Medium difficulty solutions
-- IMPORTANT: If the business takes phone calls, customer service calls, appointments, or handles phone-based interactions, ALWAYS prioritize recommending both: (1) A chatbot for website/messaging support, and (2) A voice agent/AI phone system that can handle calls 24/7 outside business hours
+---
 
-Return ONLY a valid JSON array with no additional text or formatting. Each object should have exactly these fields: title, description, category, difficulty, estimatedCost, timeToImplement.`;
+### For Each Recommendation Include:
+
+1. **title** — Short, professional, and clear (max 6 words). Example: "24/7 AI Voice Agent"
+2. **description** — Write in a concise, business-friendly tone (2–3 sentences).  
+   - Start with a strong action verb like *Implement, Deploy, Utilize, or Leverage*.  
+   - Clearly explain what the AI solution does and *how it benefits this specific business*.  
+   - Match the tone and length of your UX cards (≈40–60 words). Example style:  
+     "Implement a voice agent that can handle customer inquiries, schedule appointments, and take orders even outside business hours. This improves customer service by providing immediate assistance and freeing up staff time."
+3. **category** — Choose one from:  
+   Customer Service, Marketing, Operations, Analytics, Automation, Content Creation, Sales, Finance, HR & Hiring, Legal & Compliance, Productivity, E-commerce, Customer Insights, IT & Security.
+4. **suggestedTools** — 3–6 realistic tools or platforms that could implement this (e.g., ChatGPT, Zapier, Make.com, Salesforce, HubSpot, Google Workspace, Intercom, Notion, Canva, Calendly).
+5. **difficulty** — Easy, Medium, or Advanced (based on setup complexity for a small business).
+6. **estimatedCost** — Use realistic small business cost ranges like "$20–100/month", "$50–150/month", "$100–300/month".
+7. **timeToImplement** — Use short, human-friendly format like "1–2 weeks", "2–3 weeks", or "2–4 weeks".
+
+---
+
+### Style & Quality Rules:
+
+- Write all descriptions in a **natural, confident business tone** (no technical jargon).  
+- Avoid marketing fluff like "revolutionize" or "cutting-edge."  
+- Keep each recommendation **specific to this business's industry** — not generic.  
+- Prefer **Easy** and **Medium** difficulty ideas unless the business is tech-heavy.  
+- Always ensure value is **tangible**: cost savings, improved efficiency, or customer growth.  
+- If the business involves phone calls, appointments, or customer inquiries, **always include**:  
+  (1) a **24/7 AI Voice Agent**, and  
+  (2) a **Website Chatbot for Orders or FAQs**.
+- Use **consistent formatting and tone** across all 4 items to match a professional dashboard UI.
+
+---
+
+Return ONLY a valid JSON array.  
+Each object must include exactly these keys:  
+"title", "description", "category", "suggestedTools", "difficulty", "estimatedCost", "timeToImplement".
+
+Do NOT include any extra commentary or text outside the JSON array.
+`;
 
   try {
     const completion = await openai.chat.completions.create({
@@ -117,7 +145,7 @@ Return ONLY a valid JSON array with no additional text or formatting. Each objec
       messages: [
         {
           role: "system",
-          content: "You are a helpful AI business consultant focused on practical, implementable AI solutions and automation ideas for small businesses. For phone-based businesses, always prioritize chatbot and voice agent recommendations. Always respond with valid JSON only."
+          content: "You are an AI Business Consultant who helps small and medium-sized business owners discover realistic AI solutions to reduce costs, save time, or grow their business. For phone-based businesses, always prioritize chatbot and voice agent recommendations. Always respond with valid JSON only."
         },
         {
           role: "user",
@@ -162,7 +190,7 @@ Return ONLY a valid JSON array with no additional text or formatting. Each objec
     // Add IDs and validate the structure
     const validatedRecommendations: Recommendation[] = recommendations
       .filter(rec => 
-        rec.title && rec.description && rec.category && 
+        rec.title && rec.description && rec.category && rec.suggestedTools &&
         rec.difficulty && rec.estimatedCost && rec.timeToImplement
       )
       .slice(0, 4) // Ensure max 4 recommendations
@@ -184,7 +212,8 @@ Return ONLY a valid JSON array with no additional text or formatting. Each objec
 }
 
 async function generateAdvancedRecommendations(businessDescription: string, formData: FormData): Promise<Recommendation[]> {
-  const prompt = `You are an AI business consultant specializing in practical AI implementations for small businesses.
+  const prompt = `
+You are an AI Business Consultant who helps small and medium-sized business owners discover realistic AI solutions to reduce costs, save time, or grow their business.
 
 Business Information:
 - Business Name: ${formData.businessName}
@@ -201,26 +230,54 @@ Business Information:
 - Focus Areas: ${formData.focusAreas.join(', ')}
 ${formData.additionalInfo ? `- Additional Info: ${formData.additionalInfo}` : ''}
 
-Based on this detailed business profile, provide exactly 4-5 highly specific, actionable AI use case recommendations or automation ideas that would genuinely benefit this particular business.  AI use cases are specific AI implementations that would benefit the business like chatbots, customer service, etc., while AI automation ideas are ideas for automating business processes like data entry, customer service, etc.
+Your task is to generate exactly 4 practical AI recommendations that would provide measurable business value for THIS business, considering their specific profile above.
 
-Focus on:
-- Solutions that directly address their stated goals and challenges.
-- Match their technical comfort level (${formData.techComfort})
-- Stay within their budget range (${formData.budget}/month)
-- Align with their timeline (${formData.timeline})
-- Prioritize their selected focus areas: ${formData.focusAreas.join(', ')}
-- Consider their business type (${formData.businessType}) and size (${formData.companySize})
-- IMPORTANT: If the business takes phone calls, customer service calls, appointments, or handles phone-based interactions, ALWAYS prioritize recommending both: (1) A chatbot for website/messaging support, and (2) A voice agent/AI phone system that can handle calls 24/7 outside business hours
+Each recommendation should be either:
+- An **AI Use Case** (e.g., chatbot, analytics, AI marketing assistant), or
+- An **AI Automation Idea** (e.g., automate scheduling, lead follow-up, or inventory tracking)
 
-For each recommendation, provide:
-1. A clear, descriptive title (max 6 words)
-2. A practical description of how it works and benefits THIS specific business (2-3 sentences)
-3. A category from: Customer Service, Marketing, Operations, Analytics, Automation, Content Creation, Sales, Finance, HR & Hiring, Legal & Compliance, Productivity, E-commerce, Customer Insights, or IT & Security.  AI use cases are in the category of Customer Service, Marketing, Operations, Analytics, Content Creation, Sales, Finance, HR & Hiring, Legal & Compliance, Productivity, E-commerce, Customer Insights, or IT & Security.  AI automation ideas are in the category of Automation.
-4. Difficulty level: Easy, Medium, or Advanced (match their tech comfort: ${formData.techComfort})
-5. Monthly cost estimate in format "$X-Y/month" (stay within their budget: ${formData.budget})
-6. Time to implement in format "X-Y weeks" (align with their timeline: ${formData.timeline})
+---
 
-Return ONLY a valid JSON array with no additional text or formatting. Each object should have exactly these fields: title, description, category, difficulty, estimatedCost, timeToImplement.`;
+### For Each Recommendation Include:
+
+1. **title** — Short, professional, and clear (max 6 words). Example: "24/7 AI Voice Agent"
+2. **description** — Write in a concise, business-friendly tone (2–3 sentences).  
+   - Start with a strong action verb like *Implement, Deploy, Utilize, or Leverage*.  
+   - Clearly explain what the AI solution does and *how it benefits this specific business*.  
+   - Match the tone and length of your UX cards (≈40–60 words). Example style:  
+     "Implement a voice agent that can handle customer inquiries, schedule appointments, and take orders even outside business hours. This improves customer service by providing immediate assistance and freeing up staff time."
+3. **category** — Choose one from:  
+   Customer Service, Marketing, Operations, Analytics, Automation, Content Creation, Sales, Finance, HR & Hiring, Legal & Compliance, Productivity, E-commerce, Customer Insights, IT & Security.
+4. **suggestedTools** — 3–6 realistic tools or platforms that could implement this (e.g., ChatGPT, Zapier, Make.com, Salesforce, HubSpot, Google Workspace, Intercom, Notion, Canva, Calendly).
+5. **difficulty** — Easy, Medium, or Advanced (match their tech comfort: ${formData.techComfort}).
+6. **estimatedCost** — Use realistic cost ranges within their budget (${formData.budget}/month) like "$20–100/month", "$50–150/month", "$100–300/month".
+7. **timeToImplement** — Use short, human-friendly format that aligns with their timeline (${formData.timeline}) like "1–2 weeks", "2–3 weeks", or "2–4 weeks".
+
+---
+
+### Style & Quality Rules:
+
+- Write all descriptions in a **natural, confident business tone** (no technical jargon).  
+- Avoid marketing fluff like "revolutionize" or "cutting-edge."  
+- Keep each recommendation **specific to this business's industry and profile** — not generic.  
+- Match difficulty to their technical comfort level (${formData.techComfort}).  
+- Always ensure value is **tangible**: cost savings, improved efficiency, or customer growth.  
+- Focus on their stated goals: ${formData.primaryGoals.join(', ')}
+- Address their current challenges: ${formData.currentChallenges.join(', ')}
+- Prioritize their focus areas: ${formData.focusAreas.join(', ')}
+- If the business involves phone calls, appointments, or customer inquiries, **always include**:  
+  (1) a **24/7 AI Voice Agent**, and  
+  (2) a **Website Chatbot for Orders or FAQs**.
+- Use **consistent formatting and tone** across all 4 items to match a professional dashboard UI.
+
+---
+
+Return ONLY a valid JSON array.  
+Each object must include exactly these keys:  
+"title", "description", "category", "suggestedTools", "difficulty", "estimatedCost", "timeToImplement".
+
+Do NOT include any extra commentary or text outside the JSON array.
+`;
 
   try {
     const completion = await openai.chat.completions.create({
@@ -228,7 +285,7 @@ Return ONLY a valid JSON array with no additional text or formatting. Each objec
       messages: [
         {
           role: "system",
-          content: "You are a helpful AI business consultant focused on practical, implementable AI solutions and automation ideas for small businesses. For phone-based businesses, always prioritize chatbot and voice agent recommendations. Always respond with valid JSON only.  AI use cases are specific AI implementations that would benefit the business, while AI automation ideas are ideas for automating business processes."
+          content: "You are an AI Business Consultant who helps small and medium-sized business owners discover realistic AI solutions to reduce costs, save time, or grow their business.. For phone-based businesses, always prioritize chatbot and voice agent recommendations. Always respond with valid JSON only.  AI use cases are specific AI implementations that would benefit the business, while AI automation ideas are ideas for automating business processes."
         },
         {
           role: "user",
@@ -273,10 +330,10 @@ Return ONLY a valid JSON array with no additional text or formatting. Each objec
     // Add IDs and validate the structure
     const validatedRecommendations: Recommendation[] = recommendations
       .filter(rec => 
-        rec.title && rec.description && rec.category && 
+        rec.title && rec.description && rec.category && rec.suggestedTools &&
         rec.difficulty && rec.estimatedCost && rec.timeToImplement
       )
-      .slice(0, 5) // Ensure max 5 recommendations for advanced form
+      .slice(0, 4) // Ensure max 4 recommendations for advanced form
       .map((rec, index) => ({
         id: index + 1,
         ...rec
