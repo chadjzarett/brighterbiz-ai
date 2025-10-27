@@ -98,110 +98,112 @@ export default function Home() {
 
   return (
     <div className="bg-primary min-h-screen">
-      {/* Enhanced Header */}
+      {/* Enhanced Floating Header */}
       <motion.header
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6 }}
-        className="bg-primary/80 backdrop-blur-md border-b border-primary sticky top-0 w-full z-50 shadow-sm"
+        className="fixed top-0 left-0 right-0 z-50 px-4 pt-4"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            {/* Logo */}
-            <motion.button
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="flex items-center gap-2 cursor-pointer"
-              whileHover={{ scale: 1.02 }}
-            >
-              <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center border border-primary">
-                <Lightbulb className="w-5 h-5 text-white dark:text-black" />
-              </div>
-              <span className="text-xl font-semibold text-primary">BrighterBiz.ai</span>
-            </motion.button>
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-primary/90 backdrop-blur-lg border border-primary rounded-3xl shadow-lg px-4 sm:px-5 lg:px-6">
+            <div className="flex justify-between items-center py-1.5">
+              {/* Logo */}
+              <motion.button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="flex items-center gap-2 cursor-pointer"
+                whileHover={{ scale: 1.02 }}
+              >
+                <div className="w-8 h-8 bg-black dark:bg-white rounded-xl flex items-center justify-center border border-primary">
+                  <Lightbulb className="w-5 h-5 text-white dark:text-black" />
+                </div>
+                <span className="text-xl font-semibold text-primary">BrighterBiz.ai</span>
+              </motion.button>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-6">
-              {navigationItems.slice(1).map((item) => (
-                <a
-                  key={item.id}
-                  href={`#${item.id}`}
-                  className="text-secondary hover:text-primary transition-colors duration-200 text-sm font-medium relative group px-2 py-1"
+              {/* Desktop Navigation */}
+              <nav className="hidden md:flex items-center gap-6">
+                {navigationItems.slice(1).map((item) => (
+                  <a
+                    key={item.id}
+                    href={`#${item.id}`}
+                    className="text-secondary hover:text-primary transition-colors duration-200 text-sm font-medium relative group px-2 py-1"
+                  >
+                    {item.label}
+                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-black dark:bg-white transition-all duration-200 group-hover:w-full"></span>
+                  </a>
+                ))}
+                <ThemeToggle />
+                <Button
+                  onClick={scrollToInputField}
+                  variant="primary"
+                  size="md"
+                  className="rounded-3xl"
                 >
-                  {item.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-black dark:bg-white transition-all duration-200 group-hover:w-full"></span>
-                </a>
-              ))}
-              <ThemeToggle />
-              <Button
-                onClick={scrollToInputField}
-                variant="primary"
-                size="md"
-                className="rounded-lg"
-              >
-                Try For Free
-              </Button>
-            </nav>
+                  Try For Free
+                </Button>
+              </nav>
 
-            {/* Mobile Menu Button */}
-            <div className="flex md:hidden items-center gap-3">
-              <ThemeToggle />
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 text-secondary hover:text-primary hover:bg-tertiary rounded-lg transition-colors"
-                aria-label="Toggle menu"
-                aria-expanded={mobileMenuOpen}
-              >
-                {mobileMenuOpen ? (
-                  <X className="w-6 h-6" />
-                ) : (
-                  <Menu className="w-6 h-6" />
-                )}
-              </button>
+              {/* Mobile Menu Button */}
+              <div className="flex md:hidden items-center gap-3">
+                <ThemeToggle />
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="p-2 text-secondary hover:text-primary hover:bg-tertiary rounded-xl transition-colors"
+                  aria-label="Toggle menu"
+                  aria-expanded={mobileMenuOpen}
+                >
+                  {mobileMenuOpen ? (
+                    <X className="w-6 h-6" />
+                  ) : (
+                    <Menu className="w-6 h-6" />
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
 
-          {/* Mobile Menu */}
-          <AnimatePresence>
-            {mobileMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.2 }}
-                className="md:hidden border-t border-primary overflow-hidden"
-              >
-                <nav className="py-4 space-y-2">
-                  {navigationItems.slice(1).map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => handleMobileNavClick(item.id)}
-                      className="block w-full text-left px-4 py-2.5 text-secondary hover:text-primary hover:bg-tertiary rounded-lg transition-colors text-sm font-medium"
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                  <div className="px-4 pt-2">
-                    <Button
-                      onClick={() => {
-                        setMobileMenuOpen(false);
-                        scrollToInputField();
-                      }}
-                      variant="primary"
-                      size="md"
-                      className="w-full rounded-lg"
-                    >
-                      Try For Free
-                    </Button>
-                  </div>
-                </nav>
-              </motion.div>
-            )}
-          </AnimatePresence>
+            {/* Mobile Menu */}
+            <AnimatePresence>
+              {mobileMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="md:hidden border-t border-primary overflow-hidden"
+                >
+                  <nav className="py-4 space-y-2">
+                    {navigationItems.slice(1).map((item) => (
+                      <button
+                        key={item.id}
+                        onClick={() => handleMobileNavClick(item.id)}
+                        className="block w-full text-left px-4 py-2.5 text-secondary hover:text-primary hover:bg-tertiary rounded-xl transition-colors text-sm font-medium"
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                    <div className="px-4 pt-2">
+                      <Button
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          scrollToInputField();
+                        }}
+                        variant="primary"
+                        size="md"
+                        className="w-full rounded-xl"
+                      >
+                        Try For Free
+                      </Button>
+                    </div>
+                  </nav>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </motion.header>
 
       {/* Hero Section */}
-      <SectionWrapper id="hero" className="pt-16 md:pt-20 pb-20 px-4">
+      <SectionWrapper id="hero" className="pt-24 md:pt-28 pb-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
