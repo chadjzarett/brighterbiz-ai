@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { ChevronDown } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 interface AccordionProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -9,7 +10,7 @@ interface AccordionProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Accordion = ({ className, children, ...props }: AccordionProps) => (
-  <div className={cn("w-full space-y-2", className)} {...props}>
+  <div className={cn("w-full space-y-3", className)} {...props}>
     {children}
   </div>
 )
@@ -19,7 +20,14 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const AccordionItem = ({ className, children, ...props }: AccordionItemProps) => (
-  <div className={cn("border-b border-primary", className)} {...props}>
+  <div
+    className={cn(
+      "rounded-2xl border border-primary bg-primary transition-all duration-300",
+      "hover:border-secondary hover:shadow-sm",
+      className
+    )}
+    {...props}
+  >
     {children}
   </div>
 )
@@ -34,18 +42,25 @@ const AccordionTrigger = ({ className, children, isOpen, onToggle, ...props }: A
   <button
     onClick={onToggle}
     className={cn(
-      "flex flex-1 items-center justify-between py-4 font-medium transition-all hover:text-primary",
+      "flex w-full items-center justify-between px-6 py-5 text-left font-medium transition-colors duration-200",
+      "hover:text-primary",
+      isOpen && "pb-2",
       className
     )}
+    aria-expanded={isOpen}
     {...props}
   >
     {children}
-    <ChevronDown
+    <div
       className={cn(
-        "h-4 w-4 shrink-0 transition-transform duration-200 ml-2",
-        isOpen && "rotate-180"
+        "ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all duration-300",
+        isOpen
+          ? "bg-accent/10 rotate-180"
+          : "bg-tertiary"
       )}
-    />
+    >
+      <ChevronDown className="h-4 w-4 text-secondary" />
+    </div>
   </button>
 )
 
@@ -54,20 +69,23 @@ interface AccordionContentProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
 }
 
-const AccordionContent = ({ className, children, isOpen, ...props }: AccordionContentProps) => {
+const AccordionContent = ({ className, children, isOpen }: AccordionContentProps) => {
   return (
-    <div
-      className={cn(
-        "overflow-hidden text-sm transition-all duration-200 ease-in-out",
-        isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
-        className
+    <AnimatePresence initial={false}>
+      {isOpen && (
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: "auto", opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+          className="overflow-hidden"
+        >
+          <div className={cn("px-6 pb-5 pt-1 text-[15px] leading-relaxed text-secondary max-w-prose", className)}>
+            {children}
+          </div>
+        </motion.div>
       )}
-      {...props}
-    >
-      <div className={cn("pb-4 pt-0 text-secondary", className)}>
-        {children}
-      </div>
-    </div>
+    </AnimatePresence>
   )
 }
 

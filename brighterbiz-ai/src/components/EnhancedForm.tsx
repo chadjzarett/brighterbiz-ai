@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Textarea } from '@/components/ui/textarea';
-import { AlertCircle, Send } from 'lucide-react';
+import { AlertCircle, ArrowRight } from 'lucide-react';
 import { useFormValidation, useLoadingState } from '@/lib/hooks';
 import { AnimatedProgressBar } from './ProgressTracker';
 
@@ -145,7 +145,7 @@ export const EnhancedForm = ({
   return (
     <motion.div
       ref={formRef}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       className={`w-full max-w-3xl mx-auto ${className}`}
@@ -175,16 +175,16 @@ export const EnhancedForm = ({
             aria-invalid={!!errors.business}
             aria-describedby={errors.business ? "business-error" : "business-hint"}
             className={`
-              w-full px-4 py-3.5 pr-14
+              w-full px-4 py-3.5
               bg-tertiary text-primary
               border border-primary
-              rounded-lg
+              rounded-xl
               resize-none
               transition-all duration-200
               placeholder:text-tertiary
               focus:outline-none
-              focus:border-blue-500
-              focus:ring-4 focus:ring-blue-500/10
+              focus:border-accent
+              focus:ring-4 focus:ring-accent/10
               disabled:opacity-50 disabled:cursor-not-allowed
               ${errors.business ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10' : ''}
               ${isMobile ? 'text-base' : 'text-base'}
@@ -194,26 +194,28 @@ export const EnhancedForm = ({
             }}
           />
 
-          {/* Send Button */}
-          <button
-            onClick={handleSubmit}
-            disabled={!isValid || isLoading}
-            className={`
-              absolute bottom-3 right-3
-              p-2 rounded-lg
-              transition-all duration-200
-              disabled:opacity-30 disabled:cursor-not-allowed
-              ${isValid && !isLoading 
-                ? 'bg-black dark:bg-white text-white dark:text-black hover:opacity-80 cursor-pointer' 
-                : 'bg-tertiary text-secondary cursor-not-allowed'
-              }
-            `}
-            aria-label="Send message"
-            title="Send (Ctrl+Enter)"
-          >
-            <Send className="w-5 h-5" />
-          </button>
         </div>
+
+        {/* Submit Button */}
+        <button
+          onClick={handleSubmit}
+          disabled={!isValid || isLoading}
+          className={`
+            w-full mt-3 py-3 px-6 rounded-xl
+            text-sm font-semibold
+            flex items-center justify-center gap-2
+            transition-all duration-200
+            disabled:opacity-30 disabled:cursor-not-allowed
+            ${isValid && !isLoading 
+              ? 'bg-black dark:bg-white text-white dark:text-black hover:opacity-90 cursor-pointer' 
+              : 'bg-tertiary text-secondary cursor-not-allowed'
+            }
+          `}
+          title="Get Recommendations (Ctrl+Enter)"
+        >
+          Get Recommendations
+          <ArrowRight className="w-4 h-4" />
+        </button>
 
         {/* Character counter */}
         <div className="flex items-center justify-between">

@@ -61,9 +61,9 @@ export const SmoothNavigation = ({ items, className = '' }: SmoothNavigationProp
       <AnimatePresence>
         {isVisible && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
+            exit={{ opacity: 0, y: 8 }}
             className={`fixed right-6 top-1/2 transform -translate-y-1/2 z-50 ${className}`}
           >
             <div className="bg-white/90 backdrop-blur-md rounded-2xl p-3 shadow-xl border border-gray-200">
@@ -72,7 +72,6 @@ export const SmoothNavigation = ({ items, className = '' }: SmoothNavigationProp
                   <motion.button
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
-                    whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                     className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 border ${
                       activeSection === item.id
@@ -98,8 +97,7 @@ export const SmoothNavigation = ({ items, className = '' }: SmoothNavigationProp
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0 }}
             onClick={scrollToTop}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+            whileTap={{ scale: 0.95 }}
             className="fixed bottom-6 right-6 w-12 h-12 bg-black dark:bg-white text-white dark:text-black rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-50 flex items-center justify-center border border-primary"
             title="Scroll to top"
           >
@@ -132,8 +130,8 @@ export const SectionWrapper = ({
     <motion.section
       ref={ref}
       id={id}
-      initial={{ opacity: 0, y: 50 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+      initial={{ opacity: 0, y: 12 }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={className}
     >

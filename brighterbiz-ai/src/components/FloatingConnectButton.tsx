@@ -93,7 +93,6 @@ export default function FloatingConnectButton({ onConnectClick }: FloatingConnec
             {/* Floating Button */}
             <motion.button
               onClick={() => setIsExpanded(!isExpanded)}
-              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="w-14 h-14 bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group relative border border-primary"
               title="Need help implementing these solutions?"

@@ -10,6 +10,7 @@ import ConnectWithMeSection from '@/components/ConnectWithMeSection';
 import FloatingConnectButton from '@/components/FloatingConnectButton';
 import ConsultationModal from '@/components/ConsultationModal';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import Footer from '@/components/Footer';
 import {
   ArrowLeft, Clock, DollarSign, BarChart3, Loader2, Lightbulb, Mail, Megaphone,
   MessageCircle, Users, Settings, CalendarCheck, CheckCircle2, ChevronUp, Share2
@@ -142,51 +143,34 @@ function ResultsContent() {
     }
   };
 
-  const getCategoryColor = (category: string) => {
-    // Minimal color approach - subtle backgrounds with better dark mode support
-    const colors = {
-      'Customer Service': 'bg-green-500/10 text-green-700 dark:bg-green-500/20 dark:text-green-400',
-      'Marketing': 'bg-pink-500/10 text-pink-700 dark:bg-pink-500/20 dark:text-pink-400',
-      'Operations': 'bg-blue-500/10 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400',
-      'Analytics': 'bg-purple-500/10 text-purple-700 dark:bg-purple-500/20 dark:text-purple-400',
-      'Automation': 'bg-orange-500/10 text-orange-700 dark:bg-orange-500/20 dark:text-orange-400',
-      'Sales': 'bg-yellow-500/10 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400',
-      'Content Creation': 'bg-indigo-500/10 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-400',
-      'Finance': 'bg-teal-500/10 text-teal-700 dark:bg-teal-500/20 dark:text-teal-400',
-      'HR & Hiring': 'bg-rose-500/10 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400',
-      'Legal & Compliance': 'bg-gray-500/10 text-gray-700 dark:bg-gray-500/20 dark:text-gray-400',
-      'Productivity': 'bg-cyan-500/10 text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-400',
-      'E-commerce': 'bg-fuchsia-500/10 text-fuchsia-700 dark:bg-fuchsia-500/20 dark:text-fuchsia-400',
-      'Customer Insights': 'bg-lime-500/10 text-lime-700 dark:bg-lime-500/20 dark:text-lime-400',
-      'IT & Security': 'bg-red-500/10 text-red-700 dark:bg-red-500/20 dark:text-red-400'
-    };
-    return colors[category as keyof typeof colors] || 'bg-gray-500/10 text-gray-700 dark:bg-gray-500/20 dark:text-gray-400';
+  const getCategoryColor = () => {
+    return 'bg-tertiary text-secondary';
   };
 
   const getDifficultyConfig = (difficulty: string) => {
     const configs = {
       'Easy': {
-        bg: 'bg-green-500/10 dark:bg-green-500/20',
-        text: 'text-green-700 dark:text-green-400',
+        bg: 'bg-emerald-500/10',
+        text: 'text-emerald-700 dark:text-emerald-400',
         icon: '✓',
         label: 'Easy to implement'
       },
       'Medium': {
-        bg: 'bg-amber-500/10 dark:bg-amber-500/20',
+        bg: 'bg-amber-500/10',
         text: 'text-amber-700 dark:text-amber-400',
         icon: '◆',
         label: 'Moderate difficulty'
       },
       'Advanced': {
-        bg: 'bg-red-500/10 dark:bg-red-500/20',
-        text: 'text-red-700 dark:text-red-400',
+        bg: 'bg-red-500/10',
+        text: 'text-red-600 dark:text-red-400',
         icon: '★',
         label: 'Advanced implementation'
       },
     };
     return configs[difficulty as keyof typeof configs] || {
-      bg: 'bg-gray-500/10',
-      text: 'text-gray-700 dark:text-gray-400',
+      bg: 'bg-tertiary',
+      text: 'text-secondary',
       icon: '○',
       label: difficulty
     };
@@ -239,24 +223,38 @@ function ResultsContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-secondary flex items-center justify-center px-4">
+      <div className="min-h-screen bg-secondary flex items-center justify-center px-4 relative overflow-hidden">
+        {/* Ambient gradient orbs */}
+        <div className="absolute top-[10%] left-[8%] w-[24rem] h-[24rem] rounded-full bg-blue-500/[0.05] blur-[80px] pointer-events-none" aria-hidden="true" />
+        <div className="absolute bottom-[5%] right-[5%] w-[28rem] h-[28rem] rounded-full bg-violet-500/[0.04] blur-[90px] pointer-events-none" aria-hidden="true" />
+
+        {/* Dot grid texture */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.03]"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 1px 1px, rgb(var(--color-text-primary)) 0.5px, transparent 0)',
+            backgroundSize: '24px 24px',
+          }}
+          aria-hidden="true"
+        />
+
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center max-w-sm sm:max-w-md w-full"
+          className="text-center max-w-sm sm:max-w-md w-full relative"
         >
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
           >
-            <Loader2 className="w-12 h-12 sm:w-16 sm:h-16 text-blue-500 mx-auto mb-4 sm:mb-6" />
+            <Loader2 className="w-12 h-12 sm:w-16 sm:h-16 text-accent mx-auto mb-4 sm:mb-6" />
           </motion.div>
 
           <motion.h2
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-2xl sm:text-3xl font-bold text-primary mb-3 sm:mb-4"
+            className="text-2xl sm:text-3xl font-bold text-primary mb-3 sm:mb-4 font-hero tracking-[-0.02em]"
           >
             Analyzing your business...
           </motion.h2>
@@ -297,32 +295,23 @@ function ResultsContent() {
     return (
       <div className="min-h-screen bg-secondary flex items-center justify-center px-4">
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           className="text-center max-w-sm sm:max-w-md w-full"
         >
-          <motion.div
-            className="w-16 h-16 sm:w-20 sm:h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6"
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            <span className="text-red-600 text-2xl sm:text-3xl">⚠️</span>
-          </motion.div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-3 sm:mb-4">Something went wrong</h2>
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+            <span className="text-red-600 dark:text-red-400 text-2xl sm:text-3xl">⚠️</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-3 sm:mb-4 font-hero tracking-[-0.02em]">Something went wrong</h2>
           <p className="text-secondary mb-6 sm:mb-8 text-sm sm:text-base">{error}</p>
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <Button
+            onClick={() => router.push('/')}
+            variant="primary"
+            className="px-6 sm:px-8 py-3 rounded-xl shadow-lg w-full sm:w-auto"
           >
-            <Button
-              onClick={() => router.push('/')}
-              variant="primary"
-              className="px-6 sm:px-8 py-3 rounded-xl shadow-lg w-full sm:w-auto"
-            >
-              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-              Try Again
-            </Button>
-          </motion.div>
+            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+            Try Again
+          </Button>
         </motion.div>
       </div>
     );
@@ -330,35 +319,37 @@ function ResultsContent() {
 
   return (
     <div className="min-h-screen bg-secondary">
-      {/* Enhanced Header */}
+      {/* Floating Header */}
       <motion.header
-        initial={{ y: -100, opacity: 0 }}
+        initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6 }}
-        className="bg-primary/80 backdrop-blur-md border-b border-primary sticky top-0 w-full z-50 shadow-sm"
+        className="fixed top-0 left-0 right-0 z-50 px-4 pt-4"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <motion.div
-              className="flex items-center gap-2"
-              whileHover={{ scale: 1.02 }}
-            >
-              <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center border border-primary">
-                <Lightbulb className="w-5 h-5 text-white dark:text-black" />
-              </div>
-              <span className="text-xl font-semibold text-primary">BrighterBiz.ai</span>
-            </motion.div>
-            <div className="flex items-center gap-6">
-              <ThemeToggle />
-              <Button
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-primary/90 backdrop-blur-lg border border-primary rounded-full shadow-lg px-5 sm:px-6 lg:px-7">
+            <div className="flex justify-between items-center py-2">
+              <motion.button
                 onClick={() => router.push('/')}
-                variant="primary"
-                size="md"
-                className="rounded-lg flex items-center gap-2"
+                className="flex items-center gap-2.5 cursor-pointer"
               >
-                <ArrowLeft className="w-4 h-4" />
-                New Search
-              </Button>
+                <div className="w-8 h-8 bg-black dark:bg-white rounded-full flex items-center justify-center">
+                  <Lightbulb className="w-4.5 h-4.5 text-white dark:text-black" />
+                </div>
+                <span className="text-base font-semibold text-primary tracking-[-0.01em]">BrighterBiz.ai</span>
+              </motion.button>
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <Button
+                  onClick={() => router.push('/')}
+                  variant="primary"
+                  size="sm"
+                  className="rounded-full flex items-center gap-2"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  New Search
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -366,41 +357,59 @@ function ResultsContent() {
 
       {/* Hero Section */}
       <motion.section
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="max-w-4xl mx-auto text-center pt-8 sm:pt-12 pb-6 sm:pb-8 px-4"
+        className="max-w-4xl mx-auto text-center pt-24 md:pt-28 pb-6 sm:pb-8 px-4 relative overflow-hidden"
       >
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-3 sm:mb-4 leading-tight">
-          AI Recommendations for Your Business
-        </h1>
-        <p className="text-base sm:text-lg text-secondary max-w-2xl mx-auto">
-          Tailored solutions to help your business grow and improve your results.
-        </p>
+        {/* Ambient gradient orbs */}
+        <div className="absolute top-0 left-[8%] w-[20rem] h-[20rem] rounded-full bg-blue-500/[0.05] blur-[80px] pointer-events-none" aria-hidden="true" />
+        <div className="absolute -bottom-16 right-[5%] w-[24rem] h-[24rem] rounded-full bg-violet-500/[0.04] blur-[90px] pointer-events-none" aria-hidden="true" />
+
+        {/* Dot grid texture */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.03]"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 1px 1px, rgb(var(--color-text-primary)) 0.5px, transparent 0)',
+            backgroundSize: '24px 24px',
+          }}
+          aria-hidden="true"
+        />
+
+        <div className="relative">
+          <p className="text-xs tracking-[0.2em] text-accent uppercase mb-3 font-semibold">Your Results</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-primary mb-3 sm:mb-4 leading-[1.08] tracking-[-0.035em] font-hero">
+            AI Recommendations for Your Business
+          </h1>
+          <p className="text-base sm:text-lg text-secondary max-w-2xl mx-auto leading-relaxed">
+            Tailored solutions to help your business grow and improve your results.
+          </p>
+        </div>
       </motion.section>
 
       {/* Business Description */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
         className="max-w-4xl mx-auto mb-6 sm:mb-8 px-4"
       >
-        <div className="bg-primary p-3 sm:p-4 rounded-xl border border-primary shadow-sm hover:shadow-md transition-all duration-300">
+        <p className="text-xs tracking-[0.2em] text-accent uppercase font-semibold text-center mb-3">Your Business</p>
+        <div className="bg-primary p-4 sm:p-5 rounded-2xl border border-primary shadow-sm hover:border-secondary transition-all duration-300">
           {isStructuredData && formData ? (
             <div className="space-y-3">
               <div className="text-center mb-4">
-                <h3 className="text-lg sm:text-xl font-bold text-primary mb-2">
+                <h3 className="text-lg sm:text-xl font-bold text-primary mb-2 font-display tracking-[-0.01em]">
                   {formData.businessName}
                 </h3>
                 <div className="flex flex-wrap justify-center gap-2 mb-3">
-                  <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                  <span className="px-3 py-1 bg-accent/10 text-accent rounded-full text-xs font-medium">
                     {formData.businessType}
                   </span>
-                  <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                  <span className="px-3 py-1 bg-tertiary text-secondary rounded-full text-xs font-medium">
                     {formData.companySize} employees
                   </span>
-                  <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
+                  <span className="px-3 py-1 bg-tertiary text-secondary rounded-full text-xs font-medium">
                     {formData.monthlyRevenue}/month
                   </span>
                 </div>
@@ -448,14 +457,30 @@ function ResultsContent() {
             </div>
           ) : (
             <p className="text-primary text-sm sm:text-base font-semibold text-center break-words">
-              Your Business: <span className="text-blue-600">"{businessDescription}"</span>
+              Your Business: <span className="text-accent">"{businessDescription}"</span>
             </p>
           )}
         </div>
       </motion.div>
 
       {/* Results Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative overflow-hidden">
+        {/* Atmospheric background */}
+        <div className="absolute top-[15%] right-[3%] w-[22rem] h-[22rem] rounded-full bg-blue-500/[0.04] blur-[80px] pointer-events-none" aria-hidden="true" />
+        <div className="absolute bottom-[20%] left-[5%] w-[18rem] h-[18rem] rounded-full bg-violet-500/[0.03] blur-[70px] pointer-events-none" aria-hidden="true" />
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.02]"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 1px 1px, rgb(var(--color-text-primary)) 0.5px, transparent 0)',
+            backgroundSize: '28px 28px',
+          }}
+          aria-hidden="true"
+        />
+        {/* Section Label */}
+        <div className="text-center mb-8 relative">
+          <p className="text-xs tracking-[0.2em] text-accent uppercase font-semibold">Recommendations</p>
+        </div>
+
         {/* Recommendations Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-stretch">
           {sortRecommendationsByDifficulty(recommendations).map((recommendation, index) => {
@@ -464,24 +489,24 @@ function ResultsContent() {
             return (
               <motion.div
                 key={recommendation.id}
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
                 className="h-full"
               >
-                <Card className="bg-primary p-6 rounded-xl border border-primary hover:border-secondary hover:shadow-md transition-all duration-200 flex flex-col h-full">
+                <Card className="bg-primary p-6 rounded-2xl border border-primary hover:border-secondary transition-all duration-300 flex flex-col h-full">
                   {/* Card Header */}
                   <div className="flex items-start justify-between gap-4 mb-4">
                     <div className="flex items-center gap-3 flex-1">
-                      <div className="w-10 h-10 bg-tertiary rounded-lg flex items-center justify-center text-secondary flex-shrink-0">
+                      <div className="w-10 h-10 bg-accent/10 rounded-xl flex items-center justify-center text-accent flex-shrink-0">
                         <Icon className="w-5 h-5" />
                       </div>
-                      <h3 className="text-lg font-semibold text-primary leading-tight">
+                      <h3 className="text-lg font-semibold text-primary leading-tight font-display tracking-[-0.01em]">
                         {recommendation.title}
                       </h3>
                     </div>
                     <span
-                      className={`px-2.5 py-1 rounded-md text-xs font-medium whitespace-nowrap ${getCategoryColor(recommendation.category)}`}
+                      className={`px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getCategoryColor()}`}
                     >
                       {recommendation.category}
                     </span>
@@ -501,7 +526,7 @@ function ResultsContent() {
                       {getSuggestedTools(recommendation).map((tool, toolIndex) => (
                         <span
                           key={toolIndex}
-                          className="px-2 py-1 bg-tertiary text-secondary text-xs rounded-md font-medium hover:bg-hover transition-colors"
+                          className="px-2.5 py-1 bg-tertiary text-secondary text-xs rounded-full font-medium hover:bg-hover transition-colors"
                         >
                           {tool}
                         </span>
@@ -514,7 +539,7 @@ function ResultsContent() {
                     <span className="flex items-center gap-1.5">
                       <BarChart3 className="w-3.5 h-3.5" />
                       <span
-                        className={`inline-flex items-center gap-1 font-medium rounded-md px-2 py-0.5 ${difficultyConfig.bg} ${difficultyConfig.text}`}
+                        className={`inline-flex items-center gap-1 font-medium rounded-full px-2 py-0.5 ${difficultyConfig.bg} ${difficultyConfig.text}`}
                         aria-label={difficultyConfig.label}
                       >
                         <span aria-hidden="true">{difficultyConfig.icon}</span>
@@ -540,33 +565,7 @@ function ResultsContent() {
         <ConnectWithMeSection onConnectClick={handleConnectClick} />
       </main>
 
-      {/* Footer */}
-      <motion.footer
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-        className="bg-primary border-t border-primary py-12 mt-16 sm:mt-20"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center justify-center gap-6 text-center">
-            {/* Logo */}
-            <motion.div
-              className="flex items-center gap-2"
-              whileHover={{ scale: 1.02 }}
-            >
-              <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center border border-primary">
-                <Lightbulb className="w-5 h-5 text-white dark:text-black" />
-              </div>
-              <span className="text-xl font-semibold text-primary">BrighterBiz.ai</span>
-            </motion.div>
-
-            {/* Copyright */}
-            <p className="text-secondary text-sm">
-              © 2025 BrighterBiz.ai. Making AI accessible for small business.
-            </p>
-          </div>
-        </div>
-      </motion.footer>
+      <Footer />
 
       {/* Floating Connect Button */}
       <FloatingConnectButton onConnectClick={handleConnectClick} />
@@ -574,12 +573,10 @@ function ResultsContent() {
       {/* Scroll to Top Button */}
       <AnimatePresence>
         <motion.button
-          initial={{ opacity: 0, scale: 0 }}
+          initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0 }}
+          exit={{ opacity: 0, scale: 0.9 }}
           onClick={scrollToTop}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
           className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-11 h-11 sm:w-12 sm:h-12 bg-black dark:bg-white text-white dark:text-black rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-50 flex items-center justify-center border border-primary"
           title="Scroll to top"
         >
@@ -601,21 +598,34 @@ function ResultsContent() {
 export default function ResultsPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-secondary flex items-center justify-center px-4">
+      <div className="min-h-screen bg-secondary flex items-center justify-center px-4 relative overflow-hidden">
+        <div className="absolute top-[10%] left-[8%] w-[24rem] h-[24rem] rounded-full bg-blue-500/[0.05] blur-[80px] pointer-events-none" aria-hidden="true" />
+        <div className="absolute bottom-[5%] right-[5%] w-[28rem] h-[28rem] rounded-full bg-violet-500/[0.04] blur-[90px] pointer-events-none" aria-hidden="true" />
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.03]"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 1px 1px, rgb(var(--color-text-primary)) 0.5px, transparent 0)',
+            backgroundSize: '24px 24px',
+          }}
+          aria-hidden="true"
+        />
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center max-w-sm sm:max-w-md w-full"
+          className="text-center max-w-sm sm:max-w-md w-full relative"
         >
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
           >
-            <Loader2 className="w-12 h-12 sm:w-16 sm:h-16 text-blue-500 mx-auto mb-4 sm:mb-6" />
+            <Loader2 className="w-12 h-12 sm:w-16 sm:h-16 text-accent mx-auto mb-4 sm:mb-6" />
           </motion.div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-3 sm:mb-4">
-            Loading...
+          <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-3 sm:mb-4 font-hero tracking-[-0.02em]">
+            Analyzing your business...
           </h2>
+          <p className="text-secondary text-sm sm:text-base">
+            Our AI is generating personalized recommendations for you.
+          </p>
         </motion.div>
       </div>
     }>

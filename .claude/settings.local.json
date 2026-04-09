@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Read(//private/tmp/**)",
+      "Bash(kill:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

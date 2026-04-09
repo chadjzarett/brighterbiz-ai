@@ -31,20 +31,20 @@ export const ProgressTracker = ({ steps, currentStep, className = '' }: Progress
                 }}
                 className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${
                   index < currentStep
-                    ? 'bg-green-500 border-green-500 text-white'
-                    : index === currentStep
                     ? 'bg-black dark:bg-white border-black dark:border-white text-white dark:text-black'
+                    : index === currentStep
+                    ? 'border-accent bg-accent/10 text-accent'
                     : 'bg-tertiary border-primary text-tertiary'
                 }`}
               >
                 {index < currentStep ? (
                   <CheckCircle className="w-5 h-5" />
                 ) : (
-                  <span className="text-sm font-semibold">{index + 1}</span>
+                  <span className="text-sm font-bold font-display">{index + 1}</span>
                 )}
               </motion.div>
               <div className="mt-2 text-center">
-                <p className={`text-xs font-medium ${
+                <p className={`text-xs font-semibold font-display ${
                   index <= currentStep ? 'text-primary' : 'text-tertiary'
                 }`}>
                   {step.label}
@@ -62,7 +62,7 @@ export const ProgressTracker = ({ steps, currentStep, className = '' }: Progress
                   transition: { delay: index * 0.1 + 0.2 }
                 }}
                 className={`w-16 h-0.5 mx-4 transform origin-left ${
-                  index < currentStep ? 'bg-green-500' : 'bg-gray-200'
+                  index < currentStep ? 'bg-black dark:bg-white' : 'bg-tertiary'
                 }`}
               />
             )}
@@ -107,9 +107,9 @@ export const AnimatedProgressBar = ({
       </div>
       {showPercentage && (
         <motion.p
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-sm text-secondary mt-2 text-center"
+          className="text-sm text-secondary mt-2 text-center font-display font-semibold"
         >
           {Math.round(progress)}% Complete
         </motion.p>

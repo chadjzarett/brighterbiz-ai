@@ -43,6 +43,10 @@
   --color-text-tertiary: 156 163 175;
   --color-text-inverse: 255 255 255;
 
+  /* Accent Colors */
+  --color-accent: 37 99 235;
+  --color-accent-muted: 219 234 254;
+
   /* Border Colors */
   --color-border-primary: 229 231 235;
   --color-border-secondary: 209 213 219;
@@ -68,6 +72,10 @@
   --color-text-secondary: 163 163 163;
   --color-text-tertiary: 115 115 115;
   --color-text-inverse: 13 13 13;
+
+  /* Accent Colors */
+  --color-accent: 96 165 250;
+  --color-accent-muted: 30 58 138;
 
   /* Border Colors */
   --color-border-primary: 45 45 45;
@@ -161,6 +169,40 @@
     border-color: rgb(var(--color-border-focus));
   }
 
+  /* Accent color utilities */
+  .text-accent {
+    color: rgb(var(--color-accent));
+  }
+
+  .text-accent-muted {
+    color: rgb(var(--color-accent-muted));
+  }
+
+  .bg-accent {
+    background-color: rgb(var(--color-accent));
+  }
+
+  .bg-accent-muted {
+    background-color: rgb(var(--color-accent-muted));
+  }
+
+  .border-accent {
+    border-color: rgb(var(--color-accent));
+  }
+
+  /* Display typeface */
+  .font-display {
+    font-family: var(--font-display), 'DM Sans', sans-serif;
+  }
+
+  .font-hero {
+    font-family: var(--font-hero), 'Sora', sans-serif;
+  }
+
+  .font-accent {
+    font-family: var(--font-accent), 'Instrument Serif', serif;
+  }
+
   /* Screen reader only */
   .sr-only {
     position: absolute;
@@ -174,25 +216,6 @@
     border-width: 0;
   }
 
-  /* Subtle Animations and Hover Effects */
-  .hover-lift {
-    transition: all 0.2s ease;
-  }
-
-  .hover-lift:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
-  }
-
-  .card-hover {
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .card-hover:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-  }
-
   .glass-effect {
     backdrop-filter: blur(12px);
     background-color: rgba(255, 255, 255, 0.8);
@@ -202,6 +225,10 @@
   .dark .glass-effect {
     background-color: rgba(13, 13, 13, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .example-card {
+    background-color: rgb(var(--color-bg-primary));
   }
 }
 
@@ -405,4 +432,76 @@ input[type="number"] {
 
 .animate-accordion-up {
   animation: accordion-up 0.2s ease-out;
+}
+
+/* ============================================ */
+/* HERO SECTION EFFECTS                        */
+/* ============================================ */
+
+@keyframes hero-float {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(15px, -25px); }
+  66% { transform: translate(-10px, 15px); }
+}
+
+@keyframes hero-float-reverse {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(-20px, 15px); }
+  66% { transform: translate(15px, -20px); }
+}
+
+@keyframes hero-float-slow {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(10px, -15px); }
+}
+
+.hero-float {
+  animation: hero-float 12s ease-in-out infinite;
+}
+
+.hero-float-reverse {
+  animation: hero-float-reverse 14s ease-in-out infinite;
+}
+
+.hero-float-slow {
+  animation: hero-float-slow 16s ease-in-out infinite;
+}
+
+.hero-form-glow {
+  opacity: 0.3;
+  filter: blur(32px);
+  transition-property: opacity, filter;
+  transition-duration: 600ms;
+  transition-timing-function: ease;
+}
+
+.hero-form-wrapper:focus-within .hero-form-glow {
+  opacity: 0.7;
+  filter: blur(40px);
+}
+
+.hero-form-card {
+  box-shadow:
+    0 20px 40px -8px rgba(0, 0, 0, 0.06),
+    0 8px 16px -4px rgba(0, 0, 0, 0.04);
+}
+
+.dark .hero-form-card {
+  box-shadow:
+    0 20px 40px -8px rgba(0, 0, 0, 0.3),
+    0 8px 16px -4px rgba(0, 0, 0, 0.2);
+}
+
+.hero-form-wrapper:focus-within .hero-form-card {
+  border-color: rgb(var(--color-accent) / 0.15);
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgb(var(--color-accent) / 0.05);
+}
+
+.dark .hero-form-wrapper:focus-within .hero-form-card {
+  border-color: rgb(var(--color-accent) / 0.2);
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgb(var(--color-accent) / 0.1);
 }
